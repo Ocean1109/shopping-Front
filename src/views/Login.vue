@@ -42,26 +42,16 @@ export default {
   },
   methods:{
     login: function(){
-      let fd = new FormData();
-      fd.append("userName",this.userName);
-      fd.append("passwd",this.password);
-
-      let config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
       let data={"tel":this.userName.toString(),"password":this.password.toString()}
       this.$axios.post("/login", data).then( res => {
-        alert(res.data.message)
         if(res.data.code === 0){
           this.$router.push({path:'/success'})
+          alert("登录成功")
         }
       }).catch( res => {
         alert(res.data.message)
       })
     }
-
   }
 }
 </script>

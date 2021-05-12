@@ -42,14 +42,14 @@
         </router-link>
 
         <span style="float: right;">
-              <a id="loginBtn" @click="register()">注册</a>
-           </span></div>
+              <a id="RegisterBtn" @click="register()">注册</a>
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
   export default {
     name: 'Register',
     data() {
@@ -60,7 +60,6 @@
         user_name:"",
         user_sex:"",
         user_age:""
-
       }
     },
     created() {
@@ -68,28 +67,20 @@
     },
     methods: {
       register: function () {
-        let fd = new FormData();
-        fd.append("userName", this.userName);
-        fd.append("passwd", this.password);
+        let data={"tel":this.user_phone.toString(),"password":this.user_pwd.toString(),"userName":this.userName.toString(),"age":this.user_age.toString(),"gender":this.user_sex.toString()}
+        if (this.user_pwd === this.user_pwd_verify) {
+          this.$axios.post("/register", data).then(res => {
+            if(res.data.code==0){
 
-        let config = {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-
-        if (this.password === this.password2) {
-          this.$axios.post("user/register", fd, config).then(res => {
-            alert(res.data.msg)
+              alert("创建成功")
+            }
           }).catch(res => {
-            alert(res.data.msg)
+            alert(res.data.message)
           })
         } else {
           alert("两次输入的密码不同")
         }
-
       }
-
     }
   }
 </script>
@@ -252,7 +243,7 @@
     left: 210px;
   }
 
-  #loginBtn {
+  #RegisterBtn {
     margin-right: 30px;
     background: rgb(0, 142, 173);
     padding: 7px 10px;
