@@ -100,74 +100,22 @@
             <section class="content">
                 <div class="ContentContainer">
                     <div class="FeatureBlock">
-                        <div class="jcarousel-clip"></div>
+                        <div class="jcarousel-clip">
                             <ul class="GoodList">
-                                <li class="Good">
-                                    <div class="GoodImage">
-                                        <img v-model="picture_url" src="../assets/images/banner1.png" alt="" style="width: 180px; height: 180px;">
-                                    </div>
-                                    <div class="GoodDes">
-                                        <p  v-model="good_des">{{good_des}}</p>
-                                        <p>描述</p>
-                                    </div>
-                                    <div class="GoodPrice" v-model="good_price">
-                                        {{good_price}}
-                                        600
-                                    </div>
-                                </li>
-                                <li class="Good">
-                                    <div class="GoodImage">
-                                        <img v-model="picture_url" src="../assets/images/banner1.png" alt="" style="width: 180px; height: 180px;">
-                                    </div>
-                                    <div class="GoodDes">
-                                        <p  v-model="good_des">{{good_des}}</p>
-                                        <p>描述</p>
-                                    </div>
-                                    <div class="GoodPrice" v-model="good_price">
-                                        {{good_price}}
-                                        600
-                                    </div>
-                                </li>
-                                <li class="Good">
-                                    <div class="GoodImage">
-                                        <img v-model="picture_url" src="../assets/images/banner1.png" alt="" style="width: 180px; height: 180px;">
-                                    </div>
-                                    <div class="GoodDes">
-                                        <p  v-model="good_des">{{good_des}}</p>
-                                        <p>描述</p>
-                                    </div>
-                                    <div class="GoodPrice" v-model="good_price">
-                                        {{good_price}}
-                                        600
-                                    </div>
-                                </li>
-                                <li class="Good">
-                                    <div class="GoodImage">
-                                        <img v-model="picture_url" src="../assets/images/banner1.png" alt="" style="width: 180px; height: 180px;">
-                                    </div>
-                                    <div class="GoodDes">
-                                        <p  v-model="good_des">{{good_des}}</p>
-                                        <p>描述</p>
-                                    </div>
-                                    <div class="GoodPrice" v-model="good_price">
-                                        {{good_price}}
-                                        600
-                                    </div>
-                                </li>
-                                <li class="Good">
-                                    <div class="GoodImage">
-                                        <img v-model="picture_url" src="../assets/images/banner1.png" alt="" style="width: 180px; height: 180px;">
-                                    </div>
-                                    <div class="GoodDes">
-                                        <p  v-model="good_des">{{good_des}}</p>
-                                        <p>描述</p>
-                                    </div>
-                                    <div class="GoodPrice" v-model="good_price">
-                                        {{good_price}}
-                                        600
-                                    </div>
-                                </li>
+                              <li class="Good" v-for="product in products">
+                                <div class="GoodImage">
+                                  <img v-model="picture_url" v-bind:src="product.productImage" alt="" style="width: 180px; height: 180px;">
+                                </div>
+                                <div class="GoodDes">
+                                  <p  v-model="good_des">{{product.productDesc}}</p>
+                                </div>
+                                <div class="GoodPrice" v-model="good_price">
+                                  {{product.productPrice}}
+                                </div>
+                              </li>
+
                             </ul>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -188,12 +136,26 @@
         name: "Home",
         data(){
             return{
+              products:[
+                {
+                  // id: 0,
+                  // productDesc: "乐扣乐扣（LOCK&LOCK）遇见元气保温杯弹跳咖啡杯男女办公马克杯车载大容量随行水杯子550ML黑色",
+                  // productImage: "http://ocean1109.oss-cn-beijing.aliyuncs.com/my_file/c75c4b1c-b957-4cb9-a4c7-19b1c536a98a.jpg?Expires=2251615796&OSSAccessKeyId=LTAI5t6Ke7hnD9M1WF6bvhae&Signature=2i9t3Z7l1t1Frwe6VHRI7TQzqxo%3D",
+                  // productPrice: 119.0
+                }
+              ],
                 good_id:"",
                 picture_url:"",
                 good_des:"",
                 good_price:"",
                 good_name:""
             }
+        },
+        created() {
+          const _this=this
+          this.$axios.get("/product").then(res=>{
+            _this.products=res.data
+          })
         }
     }
 
