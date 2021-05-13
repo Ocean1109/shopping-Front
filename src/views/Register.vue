@@ -30,19 +30,12 @@
         <input type="radio" value="female" name="sex" v-model="user_sex">女
       </p>
 
-      <div id="errorText" style="height: 20px;margin-top:10px">
-        <p style="color: red;display: none">用户名密码错误请从新输入</p>
-      </div>
-      <div
-        style="height: 50px; line-height: 50px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
-        <!--        <p style="margin: 0px 35px 20px 45px;"><span style="float: left;"><a style="color: rgb(204, 204, 204);"-->
-        <!--                                                                             href="#">忘记密码?</a></span>-->
+      <div style="margin-top: 30px; height: 50px; line-height: 50px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
         <router-link to='/login'>
           <span style="float: left;margin-left: 10px;font-size: 14px;">已有账号，现在登录</span>
         </router-link>
-
         <span style="float: right;">
-              <a id="RegisterBtn" @click="register()">注册</a>
+          <a id="RegisterBtn" @click="register()">注册</a>
         </span>
       </div>
     </div>
@@ -87,7 +80,6 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   body {
     background: #ebebeb;
@@ -107,7 +99,9 @@
     position:fixed;
     background-size:100% 100%;
     background-color: #FFDEE9;
-    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 33%);
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 83%);
+    top:0px;
+    left: 0px;
   }
 
   #register_box{
@@ -120,10 +114,6 @@
     height: 400px;
     text-align: center;
     opacity: 50%;
-  }
-
-  #sex{
-    text-align: left;
   }
 
   .ipt {
@@ -180,69 +170,6 @@
 
   a {
     text-decoration: none;
-  }
-
-  .tou {
-    background: url("../assets/images/tou.png") no-repeat;
-    width: 97px;
-    height: 92px;
-    position: absolute;
-    top: -87px;
-    left: 140px;
-  }
-
-  .left_hand {
-    background: url("../assets/images/left_hand.png") no-repeat;
-    width: 32px;
-    height: 37px;
-    position: absolute;
-    top: -38px;
-    left: 150px;
-  }
-
-  .right_hand {
-    background: url("../assets/images/right_hand.png") no-repeat;
-    width: 32px;
-    height: 37px;
-    position: absolute;
-    top: -38px;
-    right: -64px;
-  }
-
-  .initial_left_hand {
-    background: url("../assets/images/hand.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -12px;
-    left: 100px;
-  }
-
-  .initial_right_hand {
-    background: url("../assets/images/hand.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -12px;
-    right: -112px;
-  }
-
-  .left_handing {
-    background: url("../assets/images/left-handing.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -24px;
-    left: 139px;
-  }
-
-  .right_handinging {
-    background: url("../assets/images/right_handing.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -21px;
-    left: 210px;
   }
 
   #RegisterBtn {

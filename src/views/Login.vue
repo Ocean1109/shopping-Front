@@ -9,19 +9,20 @@
          <span class="p_logo"></span>
          <input class="ipt" id="password" type="password" v-model="password" placeholder="请输入密码" value="password">
        </p>
-       <div id="errorText" style="height: 20px;margin-top:10px">
-         <p  style="color: red;display: none">用户名密码错误请从新输入</p>
-       </div>
-       <div style="height: 50px; line-height: 50px; margin-top: 30px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
-         <!--        <p style="margin: 0px 35px 20px 45px;"><span style="float: left;"><a style="color: rgb(204, 204, 204);"-->
-         <!--                                                                             href="#">忘记密码?</a></span>-->
+       <div style="margin-top: 60px; height: 50px; line-height: 50px;  border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
+
          <router-link to='/Register'>
            <span style="float: left;margin-left: 10px;font-size: 14px;">没有账号？现在注册</span>
          </router-link>
 
          <span style="float: right;">
-              <a id="loginBtn" @click="login()">登录</a>
-           </span></div>
+<!--           <router-link to="/">-->
+<!--             <a id="loginBtn" @click="login()">登录</a>-->
+<!--           </router-link>-->
+           <a id="loginBtn" @click="login()">登录</a>
+
+         </span>
+       </div>
 
      </div>
    </div>
@@ -60,7 +61,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   body{
     background: #ffffff;
@@ -75,7 +75,9 @@ export default {
     position:fixed;
     background-size:100% 100%;
     background-color: #FFDEE9;
-    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 33%);
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 83%);
+    top:0px;
+    left: 0px;
   }
   #login_box{
     border-radius: 20px;
@@ -88,11 +90,6 @@ export default {
     background-color: white;
     opacity: 50%;
   }
-  /*.top_div{*/
-  /*  !*background: #008ead;*!*/
-  /*  width: 100%;*/
-  /*  height: 200px;*/
-  /*}*/
   .ipt{
     border: 1px solid #d3d3d3;
     padding: 10px 10px;
@@ -129,62 +126,7 @@ export default {
   a{
     text-decoration: none;
   }
-  .tou{
-    background: url("../assets/images/tou.png") no-repeat;
-    width: 97px;
-    height: 92px;
-    position: absolute;
-    top: -87px;
-    left: 140px;
-  }
-  .left_hand{
-    background: url("../assets/images/left_hand.png") no-repeat;
-    width: 32px;
-    height: 37px;
-    position: absolute;
-    top: -38px;
-    left: 150px;
-  }
-  .right_hand{
-    background: url("../assets/images/right_hand.png") no-repeat;
-    width: 32px;
-    height: 37px;
-    position: absolute;
-    top: -38px;
-    right: -64px;
-  }
-  .initial_left_hand{
-    background: url("../assets/images/hand.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -12px;
-    left: 100px;
-  }
-  .initial_right_hand{
-    background: url("../assets/images/hand.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -12px;
-    right: -112px;
-  }
-  .left_handing{
-    background: url("../assets/images/left-handing.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -24px;
-    left: 139px;
-  }
-  .right_handinging{
-    background: url("../assets/images/right_handing.png") no-repeat;
-    width: 30px;
-    height: 20px;
-    position: absolute;
-    top: -21px;
-    left: 210px;
-  }
+
   #loginBtn {
     margin-right: 30px;
     background: rgb(0, 142, 173);
