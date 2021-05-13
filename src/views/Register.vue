@@ -67,12 +67,14 @@
     },
     methods: {
       register: function () {
-        let data={"tel":this.user_phone.toString(),"password":this.user_pwd.toString(),"userName":this.userName.toString(),"age":this.user_age.toString(),"gender":this.user_sex.toString()}
+        let data={"tel":this.user_phone,"password":this.user_pwd,"userName":this.user_name,"age":this.user_age,"gender":this.user_sex}
         if (this.user_pwd === this.user_pwd_verify) {
           this.$axios.post("/register", data).then(res => {
-            if(res.data.code==0){
+            if(res.data.code === 0){
 
               alert("创建成功")
+            }else{
+              alert(res.data.message)
             }
           }).catch(res => {
             alert(res.data.message)

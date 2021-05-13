@@ -47,6 +47,10 @@ export default {
         if(res.data.code === 0){
           this.$router.push({path:'/success'})
           alert("登录成功")
+        }else if(res.data.code ===1){
+          alert(res.data.message)
+        }else if(res.data.code ===2){
+          alert(res.data.message)
         }
       }).catch( res => {
         alert(res.data.message)
