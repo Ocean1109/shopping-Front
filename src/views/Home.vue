@@ -103,14 +103,16 @@
                         <div class="jcarousel-clip">
                             <ul class="GoodList">
                               <li class="Good" v-for="product in products">
-                                <div class="GoodImage">
-                                  <img v-model="picture_url" v-bind:src="product.productImage" alt="" style="width: 180px; height: 180px;">
-                                </div>
-                                <div class="GoodDes">
-                                  <p  v-model="good_des">{{product.productDesc}}</p>
-                                </div>
-                                <div class="GoodPrice" v-model="good_price">
-                                  {{product.productPrice}}
+                                <div v-on:click="select(product.id)">
+                                  <div class="GoodImage">
+                                    <img v-model="picture_url" v-bind:src="product.productImage" alt="" style="width: 180px; height: 180px;">
+                                  </div>
+                                  <div class="GoodDes">
+                                    <p  v-model="good_des">{{product.productDesc}}</p>
+                                  </div>
+                                  <div class="GoodPrice" v-model="good_price">
+                                    {{product.productPrice}}
+                                  </div>
                                 </div>
                               </li>
 
@@ -156,7 +158,13 @@
           this.$axios.get("/product").then(res=>{
             _this.products=res.data
           })
+        },
+        methods:{
+          select:function (productId) {
+            alert(productId)
+          }
         }
+
     }
 
 </script>
