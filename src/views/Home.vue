@@ -111,7 +111,7 @@
                                     <p  v-model="good_des">{{product.productDesc}}</p>
                                   </div>
                                   <div class="GoodPrice" v-model="good_price">
-                                    {{product.productPrice}}
+                                    ¥{{product.productPrice}}
                                   </div>
                                 </div>
                               </li>
@@ -196,9 +196,9 @@
     }
 
     .WholePage{
-        width: 1000px;
+        width: 100%;
         height: 100%;
-        margin-left:140px;
+
 
     }
 
@@ -207,7 +207,7 @@
     }
     .HeaderRight{
         float: right;
-        width: 700px;
+        width: 1000px;
     }
     .TopNav{
         float: right;
@@ -369,7 +369,7 @@
         border: 1px solid #DAD8D8;
         position: relative;
         margin-bottom: 10px;
-        margin-right: 10px;
+        margin-left: 50px;
     }
     .GoodImage{
         display: block;
