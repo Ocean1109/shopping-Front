@@ -47,15 +47,15 @@
         }
         //登录操作
         login(data).then(res=>{
-          if (res.data.code===0){
-            ElMessage.success('登陆成功');
-          }else if(res.data.code ===1){
-            alert(res.data.message)
-          }else if(res.data.code ===2){
-            alert(res.data.message)
+          if (res.code === 0){
+            ElMessage.success("登录成功")
+          }else if(res.code ===1){
+            alert(res.message)
+          }else if(res.code ===2){
+            alert(res.message)
           }
         }).catch( res => {
-          alert(res.data.message)
+          alert(res.data.msg())
         })
       };
 
