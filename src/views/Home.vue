@@ -113,26 +113,10 @@
           <!--商品列表展示区-->
           <div class="ListBody">
             <el-col :span="4" v-for="(product,index) in testData" :key="index">
-              <img :src="product.goodimg" style="height: 150px;width: 150px">
-              <p style="text-align: left;margin-left: 20px">{{product.goodtext}}</p>
-              <p style="margin-bottom: 20px"><span>{{product.goodprice}}</span></p>
-<!--              <p style="display: none">{{index}}</p>-->
+              <img :src="product.productImage" style="height: 150px;width: 150px">
+              <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
+              <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
             </el-col>
-<!--            <el-col :span="4">-->
-<!--              <img src="../assets/image1.png" style="height: 150px;width: 150px">-->
-<!--            </el-col>-->
-<!--            <el-col :span="4">-->
-<!--              <img src="../assets/image1.png" style="height: 150px;width: 150px">-->
-<!--            </el-col>-->
-<!--            <el-col :span="4">-->
-<!--              <img src="../assets/image1.png" style="height: 150px;width: 150px">-->
-<!--            </el-col>-->
-<!--            <el-col :span="4">-->
-<!--              <img src="../assets/image1.png" style="height: 150px;width: 150px">-->
-<!--            </el-col>-->
-<!--            <el-col :span="4">-->
-<!--              <img src="../../public/image1.png" style="height: 150px;width: 150px">-->
-<!--            </el-col>-->
           </div>
         </el-main>
       </el-container>
@@ -144,6 +128,7 @@
 <script>
   import {reactive} from 'vue'
   import router from "../router";
+  import {allProduct} from "../http/api"
   //全局变量
   const serverSrc='www.baidu.com';
   const token='12345678';
@@ -163,59 +148,62 @@
         searchKey:''
       });
 
-
-      // let Data = reactive([
-      //
-      // ])
       let testData = reactive([
-        {
-          goodimg:'../../image1.png',
-          goodtext: '商品1',
-          goodprice: 100
-        },
-        {
-          goodimg:'../../image2.png',
-          goodtext: '商品2',
-          goodprice: 200
-        },
-        {
-          goodimg:'../../image3.png',
-          goodtext: '商品3',
-          goodprice: 300
-        },
-        {
-          goodimg:'../../image4.png',
-          goodtext: '商品4',
-          goodprice: 400
-        },
-        {
-          goodimg:'../../image1.png',
-          goodtext: '商品5',
-          goodprice: 500
-        },
-        {
-          goodimg:'../../image1.png',
-          goodtext: '商品6',
-          goodprice: 600
-        },
-        {
-          goodimg:'../../image1.png',
-          goodtext: '商品7',
-          goodprice: 600
-        },
-        {
-          goodimg:'../../image1.png',
-          goodtext: '商品8',
-          goodprice: 600
-        }
+        // {
+        //   goodimg:'../../image1.png',
+        //   goodtext: '商品1',
+        //   goodprice: 100
+        // },
+        // {
+        //   goodimg:'../../image2.png',
+        //   goodtext: '商品2',
+        //   goodprice: 200
+        // },
+        // {
+        //   goodimg:'../../image3.png',
+        //   goodtext: '商品3',
+        //   goodprice: 300
+        // },
+        // {
+        //   goodimg:'../../image4.png',
+        //   goodtext: '商品4',
+        //   goodprice: 400
+        // },
+        // {
+        //   goodimg:'../../image1.png',
+        //   goodtext: '商品5',
+        //   goodprice: 500
+        // },
+        // {
+        //   goodimg:'../../image1.png',
+        //   goodtext: '商品6',
+        //   goodprice: 600
+        // },
+        // {
+        //   goodimg:'../../image1.png',
+        //   goodtext: '商品7',
+        //   goodprice: 600
+        // },
+        // {
+        //   goodimg:'../../image1.png',
+        //   goodtext: '商品8',
+        //   goodprice: 600
+        // }
 
       ]);
 
+      allProduct().then(res=>{
+        console.log(res)
+        testData=res;
+        console.log(testData)
+      })
       let searchBtn =()=>{
         router.push({path:'/CommodityList'})
       };
       return{
-        searchData,searchBtn,testData
+        searchData,
+        searchBtn,
+        testData
       }
     }
   }

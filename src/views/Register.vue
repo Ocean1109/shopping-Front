@@ -40,7 +40,7 @@
 <script>
     import {reactive} from 'vue'
     import {ElMessage} from "element-plus";
-    import {login} from "../http/api";
+    import {register} from "../http/api";
     import router from "../router";
 
     export default {
@@ -76,10 +76,10 @@
                 //测试
                 // router.push({path:'/login'})
                 //与后端进行数据传输
-                login(data).then(res=> {
+                register(data).then(res=> {
                     if(res.code === 0){
                         ElMessage.success('创建成功');
-                        router.push({path:'/login'})
+                        router.push({path:'/'})
                     }else{
                         alert(res.message)
                     }
