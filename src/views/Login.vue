@@ -51,6 +51,7 @@
           if (res.code===0){
             ElMessage.success('登陆成功');
             router.push({path:'/'})
+
           }else if(res.code ===1){
             alert(res.message)
           }else if(res.code ===2){
@@ -58,6 +59,7 @@
           }
         }).catch( res => {
           alert(res.message)
+
         })
       };
 

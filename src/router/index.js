@@ -5,12 +5,12 @@ import Register from "../views/Register";
 import CommodityList from "../views/CommodityList";
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: Home
   },
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: Login
   },
