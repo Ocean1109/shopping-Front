@@ -2,23 +2,23 @@
     <div class="background">
         <div class="register_box">
             <p class="input_box">
-                <el-input class="ipt" placeholder="请输入手机号"
+                <el-input class="ipt" placeholder="请输入手机号" style="border-radius: 20px"
                           prefix-icon="el-icon-mobile-phone" v-model="RegisterData.userPhone"></el-input>
             </p>
             <p class="input_box">
-                <el-input class="ipt" placeholder="请输入密码" id="PwdValue"
+                <el-input class="ipt" placeholder="请输入密码" id="PwdValue" style="border-radius: 20px"
                           prefix-icon="el-icon-lock" v-model="RegisterData.userpwd" show-password></el-input>
             </p>
             <p class="input_box">
-                <el-input class="ipt" placeholder="再次确认密码" id="PwdValueCheck"
+                <el-input class="ipt" placeholder="再次确认密码" id="PwdValueCheck" style="border-radius: 20px"
                           prefix-icon="el-icon-lock" v-model="RegisterData.userpwdCheck" show-password></el-input>
             </p>
             <p class="input_box">
-                <el-input class="ipt" placeholder="请输入姓名"
+                <el-input class="ipt" placeholder="请输入姓名" style="border-radius: 20px"
                           prefix-icon="el-icon-user" v-model="RegisterData.username"></el-input>
             </p>
             <p class="input_box">
-                <el-input class="ipt" placeholder="年龄"
+                <el-input style="border-radius: 20px" class="ipt" placeholder="年龄"
                           prefix-icon="el-icon-date" v-model="RegisterData.userage"></el-input>
             </p>
             <p class="input_box" id="SexRadio">
@@ -40,6 +40,9 @@
 <script>
     import {reactive} from 'vue'
     import {ElMessage} from "element-plus";
+    import {login} from "../http/api";
+    import router from "../router";
+
     export default {
         name: "Register",
         setup(){
@@ -55,8 +58,8 @@
             let RegisterBtn =()=>{
                 //发送到后端的数据
                 //是否需要tostring
-                // let data={"tel":RegisterData.userPhone,"password":RegisterData.userpwd,"userName":RegisterData.username,
-                //     "age":RegisterData.userage,"gender":RegisterData.usersex};
+                let data={"tel":RegisterData.userPhone,"password":RegisterData.userpwd,"userName":RegisterData.username,
+                    "age":RegisterData.userage,"gender":RegisterData.usersex};
                 //判断输入框是否为空
                 if (!RegisterData.userPhone||!RegisterData.userpwd||!RegisterData.userpwdCheck||!RegisterData.username
                 ||!RegisterData.userage||!RegisterData.usersex){
@@ -70,8 +73,20 @@
                     document.getElementById("PwdValueCheck").value="";
                     return
                 }
-            }
-
+                //测试
+                // router.push({path:'/login'})
+                //与后端进行数据传输
+                login(data).then(res=> {
+                    if(res.code === 0){
+                        ElMessage.success('创建成功');
+                        router.push({path:'/login'})
+                    }else{
+                        alert(res.message)
+                    }
+                }).catch(res => {
+                    alert(res.data.message)
+                })
+            };
             return{
                 RegisterData,RegisterBtn
             }
@@ -102,24 +117,24 @@
         left: 0px;
     }
     .register_box{
-        border-radius: 20px;
         background: white;
-        margin: 100px auto auto;
         border: 1px solid rgb(231, 231, 231);
         border-image: none;
         width: 450px;
         height: 400px;
         text-align: center;
         opacity: 50%;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
     }
     .input_box{
-        /*padding: 2px;*/
         position: relative;
     }
     .ipt{
         border: 1px solid #cccccc;
         width: 340px;
-        border-radius: 4px;
         margin-top: 15px;
     }
     #SexRadio{

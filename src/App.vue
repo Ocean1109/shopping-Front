@@ -4,14 +4,9 @@
 
 <script>
 
-    import {getData} from './http/api'
     export default {
       name: 'App',
-      setup(){
-          getData.then(res=>{
-              console.log(res);
-          })
-      }
+
     }
 
 </script>

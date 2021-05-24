@@ -2,11 +2,11 @@
   <div class="background">
     <div class="login_box">
       <p style="padding: 30px 0px 10px; position:relative;">
-        <el-input class="ipt" id="ipt_phone"
+        <el-input class="ipt" id="ipt_phone" style="border-radius: 20px"
                   placeholder="请输入账号" prefix-icon="el-icon-mobile-phone" v-model="loginData.userPhone"></el-input>
       </p>
       <p>
-        <el-input class="ipt" placeholder="请输入密码"
+        <el-input class="ipt" placeholder="请输入密码" style="border-radius: 20px"
                   prefix-icon="el-icon-lock" v-model="loginData.password" show-password></el-input>
       </p>
       <router-link to='/register'>
@@ -18,6 +18,7 @@
         <el-button class="loginBtn" type="primary" plain @click="loginBtn">登录</el-button>
       </span>
 
+<!--      <p>{{Home_.token}}</p>-->
     </div>
   </div>
 </template>
@@ -26,7 +27,8 @@
   import {reactive} from 'vue'
   import { ElMessage } from 'element-plus'
   import {login} from '../http/api'
-  // import router from "../router";
+  import router from "../router";
+  import {Home_} from "./Home";
   export default {
     name:'Login',
     setup(){
@@ -35,7 +37,6 @@
         userPhone:'',
         password:''
       });
-
       //登录按钮绑定的事件
       let loginBtn = ()=>{
         //发送到后端的数据
@@ -47,20 +48,21 @@
         }
         //登录操作
         login(data).then(res=>{
-          if (res.data.code===0){
+          if (res.code===0){
             ElMessage.success('登陆成功');
-          }else if(res.data.code ===1){
-            alert(res.data.message)
-          }else if(res.data.code ===2){
-            alert(res.data.message)
+            router.push({path:'/'})
+          }else if(res.code ===1){
+            alert(res.message)
+          }else if(res.code ===2){
+            alert(res.message)
           }
         }).catch( res => {
-          alert(res.data.message)
+          alert(res.message)
         })
       };
 
       return{
-        loginData,loginBtn
+        loginData,loginBtn,Home_
       }
     }
   }
@@ -85,8 +87,6 @@
     left: 0px;
   }
   .login_box{
-    border-radius: 20px;
-    margin: 180px auto auto;
     border: 1px solid rgb(231, 231, 231);
     border-image: none;
     width: 450px;
@@ -94,11 +94,14 @@
     text-align: center;
     background-color: #ffffff;
     opacity: 50%;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
   }
   .ipt{
     border: 1px solid #cccccc;
     width: 340px;
-    border-radius: 4px;
   }
   #ipt_phone{
     margin-top: 20px;
