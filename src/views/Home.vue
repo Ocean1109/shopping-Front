@@ -34,7 +34,7 @@
       </el-col>
     </el-row>
     <!--主体展示区-->
-    <div>
+    <div style="width: 1300px;margin: 0 auto">
       <el-container class="CommodityBody">
         <el-header style="height: 0px"></el-header>
         <el-main>
@@ -72,7 +72,7 @@
           </el-col>
           <!--图片走马灯-->
           <el-col :span="24">
-            <div class="block">
+            <div class="block" style="margin-left: 35px">
               <el-carousel  trigger="click" style="margin-top: 30px;width: 420px" height="280px">
                 <el-carousel-item>
                   <img src="../assets/image1.png">
