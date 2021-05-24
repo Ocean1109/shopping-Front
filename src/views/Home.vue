@@ -112,7 +112,7 @@
         <el-main>
           <!--商品列表展示区-->
           <div class="ListBody">
-            <el-col :span="4" v-for="(product,index) in testData" :key="index">
+            <el-col :span="4" v-for="(product,index) in testData.products" :key="index">
               <img :src="product.productImage" style="height: 150px;width: 150px">
               <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
               <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
@@ -148,54 +148,12 @@
         searchKey:''
       });
 
-      let testData = reactive([
-        // {
-        //   goodimg:'../../image1.png',
-        //   goodtext: '商品1',
-        //   goodprice: 100
-        // },
-        // {
-        //   goodimg:'../../image2.png',
-        //   goodtext: '商品2',
-        //   goodprice: 200
-        // },
-        // {
-        //   goodimg:'../../image3.png',
-        //   goodtext: '商品3',
-        //   goodprice: 300
-        // },
-        // {
-        //   goodimg:'../../image4.png',
-        //   goodtext: '商品4',
-        //   goodprice: 400
-        // },
-        // {
-        //   goodimg:'../../image1.png',
-        //   goodtext: '商品5',
-        //   goodprice: 500
-        // },
-        // {
-        //   goodimg:'../../image1.png',
-        //   goodtext: '商品6',
-        //   goodprice: 600
-        // },
-        // {
-        //   goodimg:'../../image1.png',
-        //   goodtext: '商品7',
-        //   goodprice: 600
-        // },
-        // {
-        //   goodimg:'../../image1.png',
-        //   goodtext: '商品8',
-        //   goodprice: 600
-        // }
-
-      ]);
+      const testData = reactive({
+        products: []
+      })
 
       allProduct().then(res=>{
-        console.log(res)
-        testData=res;
-        console.log(testData)
+        testData.products=res
       })
       let searchBtn =()=>{
         router.push({path:'/CommodityList'})
