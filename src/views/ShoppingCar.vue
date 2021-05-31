@@ -77,7 +77,7 @@
                         <span>{{item.price}}</span>
                     </el-col>
                     <el-col :span="3" :offset="3" style="height: 150px">
-                        <span>{{item.num}}</span>
+                        <el-input-number size="mini" v-model="item.num" :min="1"></el-input-number>
                     </el-col>
                     <el-col :span="3" :offset="3" style="height: 150px">
                         <span>{{item.num*item.price}}</span>
@@ -97,7 +97,7 @@
                         <span>删除</span>
                     </el-col>
                     <el-col :span="3" :offset="9">
-                        已选商品{{numb}}件
+                        已选商品{{num}}件
                     </el-col>
                     <el-col :span="3">
                         合计：
@@ -114,8 +114,9 @@
     import {reactive,ref} from 'vue'
     export default {
         name: "ShoppingCar",
+
         setup(){
-            let numb = ref(0)
+            let num = ref(0)
             let ChooseProduct = reactive(
                 {
                     information:'',
@@ -149,9 +150,8 @@
             let color1 = document.getElementsByClassName('product')
             console.log(ProductNum);
             let changeStyle=()=> {
-                // document.getElementsByClassName('product').style.backgroundColor = "green";
-                numb.value++;
-                console.log(numb.value)
+                num.value++;
+                console.log(num.value)
             }
 
             //结算
@@ -163,7 +163,7 @@
                 ProductNum,
                 changeStyle,
                 changeSelectedStyle,
-                numb,
+                num,
                 color1,
                 ChooseProduct,
                 pay
@@ -236,7 +236,4 @@
         margin: 0px auto;
     }
 
-    .changeStyle{
-        background-color: #42b983;
-    }
 </style>
