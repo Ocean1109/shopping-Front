@@ -18,7 +18,7 @@
         <el-button class="loginBtn" type="primary" plain @click="loginBtn">登录</el-button>
       </span>
 
-<!--      <p>{{Home_.token}}</p>-->
+      <!--      <p>{{Home_.token}}</p>-->
     </div>
   </div>
 </template>
@@ -28,7 +28,6 @@
   import { ElMessage } from 'element-plus'
   import {login} from '../http/api'
   import router from "../router";
-  import {Home_} from "./Home";
   export default {
     name:'Login',
     setup(){
@@ -64,7 +63,7 @@
       };
 
       return{
-        loginData,loginBtn,Home_
+        loginData,loginBtn
       }
     }
   }

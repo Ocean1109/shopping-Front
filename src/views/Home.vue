@@ -3,9 +3,21 @@
   <div class="home">
     <!--导航栏-->
     <el-menu  class="el-menu-demo" mode="horizontal" >
-      <el-menu-item index="1">个人中心</el-menu-item>
-      <el-menu-item index="2">我的购物车</el-menu-item>
-      <el-menu-item index="3">联系我们</el-menu-item>
+      <el-menu-item index="1">
+        <router-link to="/PersonPage" style="text-decoration: none">
+          个人中心
+        </router-link>
+      </el-menu-item>
+      <el-menu-item index="2">
+        <router-link to="/ShoppingCar" style="text-decoration: none">
+          我的购物车
+        </router-link>
+      </el-menu-item>
+      <el-menu-item index="3">
+        <router-link to="/Communication" style="text-decoration: none">
+          联系我们
+        </router-link>
+      </el-menu-item>
       <el-menu-item index="4">
         <router-link to="/login" style="text-decoration: none">
           点击这里，登录
@@ -18,9 +30,8 @@
       </el-menu-item>
     </el-menu>
     <!--搜索框-->
-    <el-row :gutter="20">
-      <el-col :span="12"></el-col>
-      <el-col :span="6">
+    <el-row :gutter="24">
+      <el-col :span="6" :offset="12">
         <div class="search_box">
           <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"
                     v-model="searchData.searchKey"></el-input>
@@ -28,7 +39,6 @@
       </el-col>
       <el-col :span="6">
         <span style="float: left;margin-top: 60px;margin-left: 270px">
-<!--        <el-button type="primary" plain>主要按钮</el-button>-->
           <el-button icon="el-icon-search" circle @click="searchBtn"></el-button>
       </span>
       </el-col>
@@ -43,29 +53,29 @@
             <el-row class="tac">
               <el-menu>
                 <el-menu-item index="1">
-                  <router-link to="/CommodityList" style="text-decoration: none">
-                    分类1分类1分类1分类1
-                  </router-link>
+                  <span @click="para" class="sa"
+                        v-for="category in ProductCategory1" :key="category">{{category.value}} /
+                  </span>
                 </el-menu-item>
                 <el-menu-item index="2">
-                  <router-link to="/CommodityList" style="text-decoration: none">
-                    分类2
-                  </router-link>
+                  <span @click="para"
+                        v-for="category in ProductCategory2" :key="category">{{category.value}} /
+                  </span>
                 </el-menu-item>
                 <el-menu-item index="3">
-                  <router-link to="/CommodityList" style="text-decoration: none">
-                    分类3
-                  </router-link>
+                  <span @click="para"
+                        v-for="category in ProductCategory3" :key="category">{{category.value}} /
+                  </span>
                 </el-menu-item>
                 <el-menu-item index="4">
-                  <router-link to="/CommodityList" style="text-decoration: none">
-                    分类4
-                  </router-link>
+                 <span @click="para"
+                       v-for="category in ProductCategory4" :key="category">{{category.value}} /
+                  </span>
                 </el-menu-item>
                 <el-menu-item index="5">
-                  <router-link to="/CommodityList" style="text-decoration: none">
-                    分类5
-                  </router-link>
+                  <span @click="para"
+                        v-for="category in ProductCategory5" :key="category">{{category.value}} /
+                  </span>
                 </el-menu-item>
               </el-menu>
             </el-row>
@@ -83,10 +93,6 @@
                 <el-carousel-item>
                   <img src="../assets/image3.png">
                 </el-carousel-item>
-                <!--          <el-carousel-item v-for="item in 4" :key="item">-->
-                <!--            <img src="../assets/image1.png">-->
-                <!--            <h3 class="small">{{ item }}</h3>-->
-                <!--          </el-carousel-item>-->
                 <el-carousel-item>
                   <img src="../assets/image4.png">
                 </el-carousel-item>
@@ -94,7 +100,7 @@
             </div>
 
             <!--走马灯下部优惠区-->
-            <div class="BlockBottom">
+            <div class="BlockBottom" style="margin-left: 35px">
               <el-row>
                 <el-col :span="12"><img src="../assets/image1.png" style="width: 210px"></el-col>
                 <el-col :span="12"><img src="../assets/image3.png" style="width: 210px"></el-col>
@@ -112,7 +118,7 @@
         <el-main>
           <!--商品列表展示区-->
           <div class="ListBody">
-            <el-col :span="4" v-for="(product,index) in testData.products" :key="index">
+            <el-col :span="4" v-for="product in testData.products" :key="product.id">
               <img :src="product.productImage" style="height: 150px;width: 150px">
               <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
               <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
@@ -127,41 +133,89 @@
 
 <script>
   import {reactive} from 'vue'
-  import router from "../router";
+  // import router from "../router";
   import {allProduct} from "../http/api"
-  //全局变量
-  const serverSrc='www.baidu.com';
-  const token='12345678';
-  const hasEnter=false;
-  const userSite="中国钓鱼岛";
-  export const Home_ ={
-    userSite,//用户地址
-    token,//用户token身份
-    serverSrc,//服务器地址
-    hasEnter,//用户登录状态
-  };
+  import {useRouter} from 'vue-router';
   export default{
 
     name: 'Home',
     setup(){
+      //搜索关键词
       let searchData = reactive({
         searchKey:''
       });
 
+      //分类数组
+      let ProductCategory1 = reactive(
+              [
+                {value:'女装'},
+                {value:'内衣'},
+                {value:'家居'},
+              ]
+      );
+      let ProductCategory2 = reactive(
+              [
+                {value:'男装'},
+                {value:'户外运动'},
+              ]
+      );
+      let ProductCategory3 = reactive(
+              [
+                {value:'手机'},
+                {value:'数码'},
+                {value:'企业'},
+              ]
+      );
+      let ProductCategory4 = reactive(
+              [
+                {value:'美妆'},
+                {value:'彩妆'},
+                {value:'个护'},
+              ]
+      );
+      let ProductCategory5 = reactive(
+              [
+                {value:'零食'},
+                {value:'生鲜'},
+                {value:'茶酒'},
+              ]
+      );
+      //从后端获取的相关信息
       const testData = reactive({
         products: []
       })
 
+      //交互，从后端传来的数据
       allProduct().then(res=>{
         testData.products=res
       })
+
+      const router = useRouter();
+      //绑定提交事件
       let searchBtn =()=>{
         router.push({path:'/CommodityList'})
       };
+
+      //测试
+      //将关键词发送到后端
+
+      let data1 = document.getElementsByClassName('sa');
+      let para =()=>{
+        router.push({name:'Commodity', params:{productclass:data1}})
+        console.log(data1)
+      }
+
       return{
         searchData,
         searchBtn,
-        testData
+        testData,
+        para,
+        ProductCategory1,
+        ProductCategory2,
+        ProductCategory3,
+        ProductCategory4,
+        ProductCategory5,
+        data1
       }
     }
   }
@@ -196,7 +250,6 @@
   .el-menu-demo{
     float: right;
     background-color: #DCFFFD;
-
   }
   li.el-menu-item{
     height: 40px;
@@ -252,6 +305,5 @@
 <style>
   input.el-input__inner{
     border-radius: 20px;
-
   }
 </style>

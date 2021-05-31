@@ -62,7 +62,7 @@
                     "age":RegisterData.userage,"gender":RegisterData.usersex};
                 //判断输入框是否为空
                 if (!RegisterData.userPhone||!RegisterData.userpwd||!RegisterData.userpwdCheck||!RegisterData.username
-                ||!RegisterData.userage||!RegisterData.usersex){
+                    ||!RegisterData.userage||!RegisterData.usersex){
                     ElMessage.error('请填写所有必填项');
                     return
                 }
