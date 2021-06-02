@@ -25,14 +25,42 @@
             </el-menu-item>
         </el-menu>
 
-        <p>个人中心</p>
+        <!--主体部分-->
+        <div class="PersonBody">
+            <el-container>
+                <el-header style="background-color: white">
+                    <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                </el-header>
+                <el-container>
+                    <el-aside width="200px" style="opacity: 60%">
+                        <el-menu class="el-menu-vertical-demo">
+                            <el-menu-item class="LeftList" v-for="item in TableList" :key="item.name" :label="item.name">
+                                <router-link :to="item.path" style="text-decoration: none;color: black"
+                                >{{item.meta.title}}</router-link>
+                            </el-menu-item>
+                        </el-menu>
+                    </el-aside>
+                    <el-main style="background-color: white;opacity: 60%">
+                        <router-view/>
+                    </el-main>
+                </el-container>
+            </el-container>
+        </div>
     </div>
 
 </template>
 
 <script>
+    // import {reactive} from "vue";
+    import router from "../router/index"
     export default {
-        name: "PersonPage"
+        name: "PersonPage",
+        setup(){
+            let TableList = router.options.routes[6].children;
+            return{
+                TableList
+            }
+        }
     }
 </script>
 
@@ -67,5 +95,13 @@
     li.el-menu-item{
         height: 40px;
         line-height: 40px;
+    }
+    .PersonBody{
+        margin-top: 50px;
+        text-align: left;
+    }
+    .LeftList{
+        text-align: center;
+
     }
 </style>

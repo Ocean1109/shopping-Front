@@ -63,7 +63,7 @@
                                 <el-header style="height: 0px"></el-header>
                                 <el-main>
                                     <div class="Product">
-                                        <el-col :span="4" v-for="product in productData.products" :key="product.id">
+                                        <el-col :span="4" v-for="product in ProductItems.products" :key="product.id">
                                             <img :src="product.productImage" style="height: 150px;width: 150px">
                                             <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
                                             <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
@@ -93,10 +93,17 @@
                     </div>
                 </el-col>
                 <el-col :span="1">
-                    <!--                &lt;!&ndash;瞄点&ndash;&gt;-->
-                    <!--                <el-affix :offset="120" style="text-align: right">-->
-                    <!--                    <a href="top">返回顶部</a>-->
-                    <!--                </el-affix>-->
+                    <!--
+
+
+
+                        ！！！！！！
+                        瞄点
+                        ！！！！！！
+
+
+
+                    -->
                 </el-col>
             </el-row>
         </div>
@@ -111,10 +118,12 @@
     export default {
         name: "CommodityList",
         setup(){
-            //从后端获取的相关信息
-            const productData = reactive({
+
+            //后端传来的商品列表中商品信息
+            const ProductItems = reactive({
                 products: []
             });
+
             //测试数据
             //类别测试数据
             let testdata = reactive(
@@ -213,7 +222,7 @@
             let id = route.params.productclass;
             console.log(id);
             return{
-                productData,
+                ProductItems,
                 testdata,
                 testplace,
                 id,
