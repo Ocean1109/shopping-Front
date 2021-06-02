@@ -52,6 +52,21 @@
           <el-col :span="8">
             <el-row class="tac">
               <el-menu>
+
+
+
+
+
+                <!--
+                  ！！！！！！
+                  单个分类
+                  ！！！！！！
+                -->
+
+
+
+
+
                 <el-menu-item index="1">
                   <span @click="para" class="sa"
                         v-for="category in ProductCategory1" :key="category">{{category.value}} /
@@ -118,7 +133,7 @@
         <el-main>
           <!--商品列表展示区-->
           <div class="ListBody">
-            <el-col :span="4" v-for="product in testData.products" :key="product.id">
+            <el-col :span="4" v-for="product in ProductItems.products" :key="product.id">
               <img :src="product.productImage" style="height: 150px;width: 150px">
               <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
               <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
@@ -180,14 +195,14 @@
                 {value:'茶酒'},
               ]
       );
-      //从后端获取的相关信息
-      const testData = reactive({
+      //后端传来的商品列表中商品信息
+      const ProductItems = reactive({
         products: []
       })
 
       //交互，从后端传来的数据
       allProduct().then(res=>{
-        testData.products=res
+        ProductItems.products=res
       })
 
       const router = useRouter();
@@ -208,7 +223,7 @@
       return{
         searchData,
         searchBtn,
-        testData,
+        ProductItems,
         para,
         ProductCategory1,
         ProductCategory2,

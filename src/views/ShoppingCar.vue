@@ -41,45 +41,60 @@
         <!--购物车中的商品-->
         <div class="ListBody">
             <h3 style="margin-top: 20px;margin-left: 20px;;margin-bottom: 20px">全部商品</h3>
+            <div style="text-align: right">
+                <el-button type="text" style="margin-right: 43px;font-size: 17px"
+                           icon="el-icon-folder-checked" @click="save">保存</el-button>\
+            </div>
+
             <hr>
             <!--购物车商品顶部-->
             <el-row :gutter="24">
-                <el-col :span="3" :offset="3">
+                <el-col :span="9">
                     <span>商品信息</span>
                 </el-col>
-                <el-col :span="3" :offset="3">
+                <el-col :span="5">
                     <span>单价</span>
                 </el-col>
-                <el-col :span="3" :offset="3">
+                <el-col :span="5">
                     <span>数量</span>
                 </el-col>
-                <el-col :span="3" :offset="3">
+                <el-col :span="5">
                     <span>金额</span>
                 </el-col>
             </el-row>
-<!--详细商品-->
+            <!--详细商品-->
             <div class="product" v-for="item in testdata" :key="item">
-                <el-row :gutter="24">
+                <el-row>
+
+
+
+
+                    <!--
+                        !!!!!!!
+                        商品勾选框
+                        !!!!!!!
+                    -->
+
+
+
+
+
                     <el-col :span="1">
-                        <el-radio style="margin-left: 17px" @click="changeStyle"></el-radio>
-                    </el-col>
-                    <el-col :span="8" style="height: 150px">
-                        <el-row :gutter="24">
-                            <el-col :span="10" style="height: 150px">
-                                <img src="../assets/image1.png" style="width: 130px;height: 130px;margin-top: 10px">
-                            </el-col>
-                            <el-col :span="10" style="height: 150px;text-align: left;line-height: 40px">
-                                <span>{{item.text}}</span>
-                            </el-col>
-                        </el-row>
+
                     </el-col>
                     <el-col :span="3" style="height: 150px">
+                        <img src="../assets/image1.png" style="width: 130px;height: 130px;margin-top: 10px">
+                    </el-col>
+                    <el-col :span="5" style="height: 150px;text-align: left;line-height: 40px">
+                        <span>{{item.text}}</span>
+                    </el-col>
+                    <el-col :span="5" style="height: 150px">
                         <span>{{item.price}}</span>
                     </el-col>
-                    <el-col :span="3" :offset="3" style="height: 150px">
+                    <el-col :span="5" style="height: 150px">
                         <el-input-number size="mini" v-model="item.num" :min="1"></el-input-number>
                     </el-col>
-                    <el-col :span="3" :offset="3" style="height: 150px">
+                    <el-col :span="5" style="height: 150px">
                         <span>{{item.num*item.price}}</span>
                     </el-col>
                 </el-row>
@@ -88,8 +103,23 @@
 
         <!--底部结算栏-->
         <el-affix position="bottom" >
-            <div class="Bottom" >
-                <el-row :gutter="24">
+
+
+
+            <!--
+                ！！！！！！
+                商品全选、删除、结算功能
+                ！！！！！！
+            -->
+
+
+
+
+
+
+
+            <div class="Bottom">
+                <el-row :gutter="24" style="margin-right: 0px">
                     <el-col :span="3">
                         <span >全选</span>
                     </el-col>
@@ -97,7 +127,7 @@
                         <span>删除</span>
                     </el-col>
                     <el-col :span="3" :offset="9">
-                        已选商品{{num}}件
+                        已选商品{{PurchaseNum}}件
                     </el-col>
                     <el-col :span="3">
                         合计：
@@ -112,11 +142,13 @@
 
 <script>
     import {reactive,ref} from 'vue'
+    import {allProduct} from "../http/api";
     export default {
         name: "ShoppingCar",
 
         setup(){
-            let num = ref(0)
+            //默认选中商品值
+            let PurchaseNum = ref(0);
             let ChooseProduct = reactive(
                 {
                     information:'',
@@ -133,44 +165,76 @@
                         price: 50,
                         num:2
                     },{
-                        text:'商品2',
-                        detail:'黑色',
-                        price: 60,
-                        num:3
-                    },{
-                        text:'商品3',
-                        detail:'黑色',
-                        price: 40,
-                        num:3
-                    }
+                    text:'商品2',
+                    detail:'黑色',
+                    price: 60,
+                    num:3
+                },{
+                    text:'商品3',
+                    detail:'黑色',
+                    price: 40,
+                    num:3
+                }
                 ]
             );
-            let changeSelectedStyle;
-            let ProductNum = testdata.length;
-            let color1 = document.getElementsByClassName('product')
-            console.log(ProductNum);
-            let changeStyle=()=> {
-                num.value++;
-                console.log(num.value)
+
+            //后台传来的购物车商品数据
+            let PurchaseItems = reactive(
+                {
+                    products: []
+                }
+            );
+
+            //建立传输
+            allProduct().then(res=>{
+                PurchaseItems.products=res
+            })
+
+
+            //商品勾选功能
+            let Choose=()=> {
+                PurchaseNum.value = PurchaseNum.value+1;
+                console.log('+1');
+                console.log(PurchaseNum.value)
             }
 
             //结算
             let pay=()=>{
                 alert('结算');
+                //选中的商品进行标记  0为未购买  1为购买  购买后删除商品，将剩余数据传到后端
+                //弹出弹框，跳转页面
             }
+
             return{
                 testdata,
-                ProductNum,
-                changeStyle,
-                changeSelectedStyle,
-                num,
-                color1,
+                Choose,
+                PurchaseNum,
                 ChooseProduct,
-                pay
+                pay,
+                PurchaseItems
+            }
+        },
+        methods: {
+            save() {
+                this.$confirm('是否保存修改?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '保存成功!'
+                        //将数据传给后端
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消保存'
+                    });
+                });
             }
         }
-
-
     }
 
 </script>
