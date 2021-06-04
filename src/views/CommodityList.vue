@@ -30,7 +30,14 @@
         </el-menu>
         <!--搜索框-->
         <el-row :gutter="20">
-            <el-col :span="6" :offset="12">
+            <el-col :span="8">
+                <div style="text-align: center;margin-top: 36px">
+                    <router-link to="/">
+                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                    </router-link>
+                </div>
+            </el-col>
+            <el-col :span="6">
                 <div class="search_box">
                     <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"></el-input>
                 </div>

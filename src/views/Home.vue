@@ -31,7 +31,14 @@
     </el-menu>
     <!--搜索框-->
     <el-row :gutter="24">
-      <el-col :span="6" :offset="12">
+      <el-col :span="12">
+        <div style="text-align: center;margin-top: 36px">
+          <router-link to="/">
+            <img src="../assets/image1.png" style="height: 60px;width: 60px;border-radius: 0px">
+          </router-link>
+        </div>
+      </el-col>
+      <el-col :span="6">
         <div class="search_box">
           <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"
                     v-model="searchData.searchKey"></el-input>
@@ -125,7 +132,8 @@
           <el-col :span="8">
             <!--走马灯右侧宣传区-->
             <div class="BlockRight">
-              <img src="../assets/image2.png" style="height: 280px;width: 210px;margin-right: 110px">
+              <img src="../assets/image2.png" style="height: 140px;width: 210px;margin-right: 110px">
+              <img src="../assets/image2.png" style="height: 140px;width: 210px;margin-right: 110px">
               <img src="../assets/image4.png" style="height: 140px;width: 210px;margin-top: 20px;margin-right: 110px">
             </div>
           </el-col>

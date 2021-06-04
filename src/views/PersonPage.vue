@@ -29,7 +29,9 @@
         <div class="PersonBody">
             <el-container>
                 <el-header style="background-color: white">
-                    <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                    <router-link to="/">
+                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                    </router-link>
                 </el-header>
                 <el-container>
                     <el-aside width="200px" style="opacity: 60%">
@@ -55,12 +57,14 @@
     import router from "../router/index"
     export default {
         name: "PersonPage",
+
         setup(){
             let TableList = router.options.routes[6].children;
             return{
                 TableList
             }
-        }
+        },
+
     }
 </script>
 

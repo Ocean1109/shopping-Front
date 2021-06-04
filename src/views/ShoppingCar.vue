@@ -26,7 +26,13 @@
         </el-menu>
         <!--搜索框-->
         <el-row :gutter="24">
-            <el-col :span="16"></el-col>
+            <el-col :span="16">
+                <div style="text-align: center;margin-top: 36px">
+                    <router-link to="/">
+                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                    </router-link>
+                </div>
+            </el-col>
             <el-col :span="6">
                 <div class="search_box">
                     <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"></el-input>
@@ -39,27 +45,26 @@
             </el-col>
         </el-row>
         <!--购物车中的商品-->
+
         <div class="ListBody">
             <h3 style="margin-top: 20px;margin-left: 20px;;margin-bottom: 20px">全部商品</h3>
-            <div style="text-align: right">
-                <el-button type="text" style="margin-right: 43px;font-size: 17px"
-                           icon="el-icon-folder-checked" @click="save">保存</el-button>\
-            </div>
-
             <hr>
             <!--购物车商品顶部-->
             <el-row :gutter="24">
                 <el-col :span="9">
                     <span>商品信息</span>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                     <span>单价</span>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                     <span>数量</span>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                     <span>金额</span>
+                </el-col>
+                <el-col :span="3">
+                    <span>操作</span>
                 </el-col>
             </el-row>
             <!--详细商品-->
@@ -88,14 +93,17 @@
                     <el-col :span="5" style="height: 150px;text-align: left;line-height: 40px">
                         <span>{{item.text}}</span>
                     </el-col>
-                    <el-col :span="5" style="height: 150px">
+                    <el-col :span="4" style="height: 150px">
                         <span>{{item.price}}</span>
                     </el-col>
-                    <el-col :span="5" style="height: 150px">
+                    <el-col :span="4" style="height: 150px">
                         <el-input-number size="mini" v-model="item.num" :min="1"></el-input-number>
                     </el-col>
-                    <el-col :span="5" style="height: 150px">
+                    <el-col :span="4" style="height: 150px">
                         <span>{{item.num*item.price}}</span>
+                    </el-col>
+                    <el-col :span="3" style="height: 150px">
+                        <el-button id="ProductID" type="text" @click="Delete" v-model="item.id">删除</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -143,6 +151,7 @@
 <script>
     import {reactive,ref} from 'vue'
     import {allProduct} from "../http/api";
+
     export default {
         name: "ShoppingCar",
 
@@ -154,7 +163,7 @@
                     information:'',
                     detail:'',
                     price:null,
-                    num:null
+                    num:null,
                 }
             )
             let testdata = reactive(
@@ -163,17 +172,20 @@
                         text:'商品1商品1商品1商品1商品1商品1商品1',
                         detail:'黑色',
                         price: 50,
-                        num:2
+                        num:2,
+                        id:1
                     },{
                     text:'商品2',
                     detail:'黑色',
                     price: 60,
-                    num:3
+                    num:3,
+                    id:2
                 },{
                     text:'商品3',
                     detail:'黑色',
                     price: 40,
-                    num:3
+                    num:3,
+                    id:3
                 }
                 ]
             );
@@ -190,6 +202,14 @@
                 PurchaseItems.products=res
             })
 
+
+
+            //删除功能
+            let Delete =()=>{
+                let index = document.getElementById('ProductID').value;
+                console.log(index)
+                // testdata.splice()
+            }
 
             //商品勾选功能
             let Choose=()=> {
@@ -211,30 +231,11 @@
                 PurchaseNum,
                 ChooseProduct,
                 pay,
-                PurchaseItems
+                PurchaseItems,
+                Delete
             }
         },
-        methods: {
-            save() {
-                this.$confirm('是否保存修改?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '保存成功!'
-                        //将数据传给后端
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消保存'
-                    });
-                });
-            }
-        }
+
     }
 
 </script>
