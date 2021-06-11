@@ -142,7 +142,16 @@
             for (let i=0;i<this.moreImages.length;i++){
                 formData.append("moreImages",this.moreImages[i].raw)
             }
-            formData.append("releaseProduct",{"productDesc":this.ProductInformation.productDesc,"productPrice":899.00,"productType":"电子产品","brand":this.ProductInformation.brand,"user":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNjIzMjQyMDA1LCJleHAiOjE2MjMzMjg0MDV9.JYXSeSsVQv_flhootBrwMEk6kWbUXPiFX2lEPA8ympOUqMPx1R-YgAoiye-Xde-6r_IW2_ZLjdPHBZhI6JS37g","productAddress":"北京","numbers":10,"rule":"产品尺寸长(mm)","productRule":"154mm"})
+            formData.append("productDesc",this.ProductInformation.productDesc)
+          formData.append("productPrice",this.ProductInformation.productPrice)
+          formData.append("productType",this.ProductInformation.productType)
+          formData.append("brand",this.ProductInformation.brand)
+          formData.append("user","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNjIzNDIyMjAwLCJleHAiOjE2MjM1MDg2MDB9.72vzuSKlbRBHjqVNIZwZDhxG8SSnRH1JccP5RR4_VLjN0usMwCHQb29w169CRUyRUF0uWKDDSpDl8pKBVhdR4w")
+          formData.append("productAddress",this.ProductInformation.productAddress)
+          formData.append("numbers",this.ProductInformation.numbers)
+          formData.append("rule",this.ProductInformation.rule)
+          formData.append("productRule",this.ProductInformation.productRule)
+
             PublishProductInformation(formData).then(res=>{
               console.log(res)
             }
