@@ -32,19 +32,21 @@
         <el-row :gutter="20">
             <el-col :span="8">
                 <div style="text-align: center;margin-top: 36px">
+                    <!--图标，返回主页-->
                     <router-link to="/">
-                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                        <img src="../assets/image1.png" id="picture" style="height: 60px;width: 60px">
                     </router-link>
                 </div>
             </el-col>
             <el-col :span="6">
                 <div class="search_box">
-                    <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"></el-input>
+                    <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"
+                              v-model="searchData.searchKey"></el-input>
                 </div>
             </el-col>
             <el-col :span="6">
                 <span style="float: left;margin-top: 60px;margin-left: 270px">
-                  <el-button icon="el-icon-search" circle ></el-button>
+                  <el-button icon="el-icon-search" circle @click="searchBtn(searchData.searchKey)"></el-button>
                 </span>
             </el-col>
         </el-row>
@@ -57,11 +59,13 @@
                         <div>
                             <p style="text-align: left;margin-left: 30px;margin-top: 30px;line-height: 75px">
                                 品牌：
-                                <span v-for="item in testdata"  :key="item">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span v-for="item in Type"  :key="item"
+                                    @click="ChooseType(item.value)">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </p>
                             <p style="text-align: left;margin-left: 30px;margin-top: 30px;margin-bottom: 50px">
                                 选择发货地址：
-                                <span v-for="item in testplace"  :key="item">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span v-for="item in ProductPlace"  :key="item"
+                                      @click="ChooseAddress(item.value)">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </p>
                         </div>
                         <!--商品展示区-->
@@ -75,14 +79,6 @@
                                             <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
                                             <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
                                         </el-col>
-
-                                        <!--测试数据-->
-                                        <el-col v-for="product in testdata2" :key="product">
-                                            <img src="../assets/image1.png" style="height: 150px;width: 150px">
-                                            <p style="text-align: left;margin-left: 20px">{{product.text}}</p>
-                                            <p style="margin-bottom: 20px"><span>{{product.price}}</span></p>
-                                        </el-col>
-
                                     </div>
                                 </el-main>
                             </el-container>
@@ -97,9 +93,12 @@
                             <p>{{item.text}}</p>
                             <p>{{item.price}}</p>
                         </div>
+                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                     </div>
                 </el-col>
                 <el-col :span="1">
+                    <a :href={Url} style="position:fixed;">返回顶部</a>
                     <!--
 
 
@@ -121,22 +120,66 @@
 
 <script>
     import {reactive} from "vue";
-    import {useRoute} from 'vue-router';
+    import {useRoute, useRouter} from 'vue-router';
+    import {ProductListOne,ProductListTwo,ProductListThree} from "../http/api";
+
     export default {
         name: "CommodityList",
         setup(){
+
+            //搜索关键词
+            let searchData = reactive({
+                searchKey:''
+            });
 
             //后端传来的商品列表中商品信息
             const ProductItems = reactive({
                 products: []
             });
 
-            //测试数据
-            //类别测试数据
-            let testdata = reactive(
+            //创建路由，将关键字通过路由传递到其他页面
+            const router = useRouter();
+
+            //绑定提交事件
+            let searchBtn =(value)=>{
+                router.push({name:'Commodity', params:{productclass:value}})
+                console.log(value)
+            };
+
+            //获取当前页面的URL
+            let Url = location.href;
+
+            //获取主页传来的类别数据
+            const route = useRoute();
+            let classify = route.params.productclass;
+
+            //按照分类获取数据
+            ProductListOne(classify).then(res=> {
+                ProductItems.products = res
+
+            }
+            )
+
+            //按照分类中的类别获取数据
+            let ChooseType = (value)=>{
+                ProductListTwo(classify,value).then(res=> {
+                        ProductItems.products = res
+                    }
+                )
+            }
+            //按照地点获取数据
+            let ChooseAddress = (value)=>{
+                ProductListThree(classify,value).then(res=> {
+                        ProductItems.products = res
+                    }
+                )
+            }
+
+            //类别数据
+            let Type = reactive(
                 [
                     {
-                        value:'类别1'
+                        value:'乐扣乐扣(LOCK&LOCK)'
                     },
                     {
                         value:'类别2'
@@ -152,8 +195,8 @@
                     }
                 ]
             );
-            //地点测试数据
-            let testplace = reactive(
+            //地点数据
+            let ProductPlace = reactive(
                 [
                     {
                         value:'北京'
@@ -172,6 +215,7 @@
                     }
                 ]
             );
+
             //右部图片测试数据
             let testdata1 = reactive(
                 [
@@ -225,16 +269,21 @@
                     text:'商品6'
                 }
             ])
-            const route = useRoute();
-            let id = route.params.productclass;
-            console.log(id);
+
+
             return{
                 ProductItems,
-                testdata,
-                testplace,
-                id,
+                Type,
+                ProductPlace,
+                classify,
                 testdata1,
-                testdata2
+                testdata2,
+                ChooseAddress,
+                ChooseType,
+                Url,
+                searchData,
+                searchBtn
+
             }
         }
     }

@@ -29,6 +29,7 @@
         <div class="PersonBody">
             <el-container>
                 <el-header style="background-color: white">
+                    <!--图标，返回主页-->
                     <router-link to="/">
                         <img src="../assets/image1.png" style="height: 60px;width: 60px">
                     </router-link>
@@ -42,7 +43,7 @@
                             </el-menu-item>
                         </el-menu>
                     </el-aside>
-                    <el-main style="background-color: white;opacity: 60%">
+                    <el-main style="background-color: white;opacity: 60%;height: 1500px">
                         <router-view/>
                     </el-main>
                 </el-container>
@@ -53,15 +54,19 @@
 </template>
 
 <script>
-    // import {reactive} from "vue";
+    import GLOBAL from "../components/GlobalVariable"
+
     import router from "../router/index"
     export default {
         name: "PersonPage",
 
         setup(){
+            let userToken = GLOBAL.token.value;
+            console.log(userToken)
             let TableList = router.options.routes[6].children;
             return{
-                TableList
+                TableList,
+                userToken
             }
         },
 

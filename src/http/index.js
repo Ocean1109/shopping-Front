@@ -1,8 +1,11 @@
 import axios from "axios";
+
 //axios.create创建了一个实例，在此编写配置，后续所有通过实例发送的请求都受到配置约束
 const $http = axios.create({
-    baseURL: 'http://localhost:8181',
-    timeout: 100000,
+    baseURL: 'http://10.28.137.229:8181',
+    // baseURL: 'http://8.140.39.93:8181',
+    // baseURL: 'http://10.128.195.62:8181',
+    timeout: 10000,
     // headers: {'X-Custom-Header': 'foobar'}
 });
 
@@ -27,4 +30,5 @@ $http.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
+//收货地址的get和post
 export default $http

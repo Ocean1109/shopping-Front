@@ -6,6 +6,7 @@ import CommodityList from "../views/CommodityList";
 import ShoppingCar from "../views/ShoppingCar"
 import Communication from "../views/Communication";
 import PersonPage from "../views/PersonPage";
+import Payment from "../views/Payment";
 const routes = [
   {
     //主页
@@ -111,7 +112,12 @@ const routes = [
       }
     ],
     component: PersonPage
-  },
+  },{
+    //注册
+    path: '/payment',
+    name: 'Payment',
+    component:Payment
+  }
 ]
 
 const router = createRouter({

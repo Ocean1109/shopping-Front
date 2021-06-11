@@ -33,6 +33,7 @@
     <el-row :gutter="24">
       <el-col :span="12">
         <div style="text-align: center;margin-top: 36px">
+          <!--图标-->
           <router-link to="/">
             <img src="../assets/image1.png" style="height: 60px;width: 60px;border-radius: 0px">
           </router-link>
@@ -46,7 +47,7 @@
       </el-col>
       <el-col :span="6">
         <span style="float: left;margin-top: 60px;margin-left: 270px">
-          <el-button icon="el-icon-search" circle @click="searchBtn"></el-button>
+          <el-button icon="el-icon-search" circle @click="searchBtn(searchData.searchKey)"></el-button>
       </span>
       </el-col>
     </el-row>
@@ -59,23 +60,8 @@
           <el-col :span="8">
             <el-row class="tac">
               <el-menu>
-
-
-
-
-
-                <!--
-                  ！！！！！！
-                  单个分类
-                  ！！！！！！
-                -->
-
-
-
-
-
                 <el-menu-item index="1">
-                  <span @click="para" class="sa"
+                  <span @click="keyword(category.value)"
                         v-for="category in ProductCategory1" :key="category">{{category.value}} /
                   </span>
                 </el-menu-item>
@@ -156,7 +142,6 @@
 
 <script>
   import {reactive} from 'vue'
-  // import router from "../router";
   import {allProduct} from "../http/api"
   import {useRouter} from 'vue-router';
   export default{
@@ -171,7 +156,7 @@
       //分类数组
       let ProductCategory1 = reactive(
               [
-                {value:'女装'},
+                {value:'生活用品'},
                 {value:'内衣'},
                 {value:'家居'},
               ]
@@ -213,32 +198,30 @@
         ProductItems.products=res
       })
 
+      //创建路由，将关键字通过路由传递到其他页面
       const router = useRouter();
       //绑定提交事件
-      let searchBtn =()=>{
-        router.push({path:'/CommodityList'})
+      let searchBtn =(value)=>{
+        router.push({name:'Commodity', params:{productclass:value}})
+        console.log(value)
       };
 
-      //测试
       //将关键词发送到后端
-
-      let data1 = document.getElementsByClassName('sa');
-      let para =()=>{
-        router.push({name:'Commodity', params:{productclass:data1}})
-        console.log(data1)
+      let keyword =(value)=>{
+        router.push({name:'Commodity', params:{productclass:value}})
+        console.log(value)
       }
 
       return{
         searchData,
         searchBtn,
         ProductItems,
-        para,
+        keyword,
         ProductCategory1,
         ProductCategory2,
         ProductCategory3,
         ProductCategory4,
         ProductCategory5,
-        data1
       }
     }
   }

@@ -2,7 +2,7 @@
     <div>
         <el-menu mode="horizontal">
             <el-menu-item index="1">所有订单</el-menu-item>
-            <el-menu-item index="2" >代付款</el-menu-item>
+            <el-menu-item index="2" @click="BeforePayment">代付款</el-menu-item>
             <el-menu-item index="3">代发货</el-menu-item>
             <el-menu-item index="4">待收货</el-menu-item>
             <el-menu-item index="5">待评价</el-menu-item>
@@ -41,37 +41,43 @@
 
         </div>
         <!--具体订单信息-->
-        <div class="product" v-for="item in testdata" :key="item" style="text-align: center;line-height: 150px">
-            <el-row>
-                <el-col :span="4" :offset="1" style="height: 150px">
-                    <img src="../assets/image1.png" style="width: 130px;height: 130px;margin-top: 10px">
-                </el-col>
-                <el-col :span="7" style="height: 150px;text-align: left;line-height: 40px">
-                    <span>{{item.text}}</span>
-                </el-col>
-                <el-col :span="3" style="height: 150px">
-                    <span>{{item.price}}</span>
-                </el-col>
-                <el-col :span="3" style="height: 150px">
-                    <span>{{item.num}}</span>
-                </el-col>
-                <el-col :span="3" style="height: 150px">
-                    <span>{{item.num*item.price}}</span>
-                </el-col>
-                <el-col :span="3" style="height: 150px">
-                    <span>{{item.style}}</span>
-                </el-col>
-            </el-row>
+        <div v-if="AllStyle=== true || BeforePaymentStyle=== true">
+            <div class="product" v-for="item in testdata" :key="item" style="text-align: center;line-height: 150px">
+                <el-row>
+                    <el-col :span="4" :offset="1" style="height: 150px">
+                        <img src="../assets/image1.png" style="width: 130px;height: 130px;margin-top: 10px">
+                    </el-col>
+                    <el-col :span="7" style="height: 150px;text-align: left;line-height: 40px">
+                        <span>{{item.text}}</span>
+                    </el-col>
+                    <el-col :span="3" style="height: 150px">
+                        <span>{{item.price}}</span>
+                    </el-col>
+                    <el-col :span="3" style="height: 150px">
+                        <span>{{item.num}}</span>
+                    </el-col>
+                    <el-col :span="3" style="height: 150px">
+                        <span>{{item.num*item.price}}</span>
+                    </el-col>
+                    <el-col :span="3" style="height: 150px">
+                        <span>{{item.style}}</span>
+                    </el-col>
+                </el-row>
+            </div>
         </div>
-
     </div>
 </template>
 
 <script>
     import {reactive} from "vue";
+    import GLOBAL from "../components/GlobalVariable"
     export default {
         name: "OrderHistory",
         setup(){
+
+            let AllStyle = GLOBAL.AllStyle;
+            let BeforePaymentStyle = GLOBAL.BeforePaymentStyle;
+
             let testdata = reactive(
                 [
                     {
@@ -95,8 +101,32 @@
                 }
                 ]
             );
+
+            let BeforepaymentProduct = reactive([]);
+            let BeforePayment = ()=>{
+                for (let i=0;i<testdata.length;i++){
+                    let j=0;
+                    if (testdata[i].style =="未付款"){
+                        BeforepaymentProduct[j] = testdata[i];
+                        j++;
+                    }
+
+                }
+                testdata = BeforepaymentProduct;
+                console.log(testdata)
+                GLOBAL.BeforePaymentStyle=true;
+                GLOBAL.AllStyle = false;
+                console.log(GLOBAL.BeforePaymentStyle)
+                location.reload()
+
+            }
+
             return{
-                testdata
+                testdata,
+                BeforepaymentProduct,
+                BeforePayment,
+                AllStyle,
+                BeforePaymentStyle
             }
         }
 
