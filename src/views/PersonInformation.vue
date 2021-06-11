@@ -12,6 +12,7 @@
                     <el-col :span="10">
                         <div>
                             我是谁？北邮隆哥
+                            {{User.user.username}}
                         </div>
                     </el-col>
                     <el-col :span="8">
@@ -37,7 +38,46 @@
                             </div>
                         </el-col>
                     </el-row>
-
+                </div>
+                <!--商品标头-->
+                <el-row :gutter="24" style="text-align: center">
+                    <el-col :span="9">
+                        <span>商品信息</span>
+                    </el-col>
+                    <el-col :span="4">
+                        <span>单价</span>
+                    </el-col>
+                    <el-col :span="4">
+                        <span>数量</span>
+                    </el-col>
+                    <el-col :span="4">
+                        <span>实付款</span>
+                    </el-col>
+                    <el-col :span="3">
+                        <span>交易状态</span>
+                    </el-col>
+                </el-row>
+                <div class="product" v-for="(item,index) in testdata" :key="index" style="text-align: center">
+                    <el-row>
+                        <el-col :span="3" style="height: 150px">
+                            <img src="../assets/image1.png" style="width: 130px;height: 130px;margin-top: 10px">
+                        </el-col>
+                        <el-col :span="5" :offset="1" style="height: 150px;text-align: left;line-height: 40px">
+                            <span>{{item.text}}</span>
+                        </el-col>
+                        <el-col :span="4" style="height: 150px;line-height: 150px">
+                            <span>{{item.price}}</span>
+                        </el-col>
+                        <el-col :span="4" style="height: 150px;line-height: 150px">
+                            <span>{{item.num}}</span>
+                        </el-col>
+                        <el-col :span="4" style="height: 150px;line-height: 150px">
+                            <span>{{item.num*item.price}}</span>
+                        </el-col>
+                        <el-col :span="3" style="height: 150px;line-height: 150px">
+                            <span>已支付</span>
+                        </el-col>
+                    </el-row>
                 </div>
             </el-main>
             <!--商品推荐-->
@@ -81,16 +121,50 @@
         name: "PersonInformation",
         setup(){
 
-            //后端传来的商品列表中商品信息
+            //推荐列表中的商品数据
             const ProductItems = reactive({
                 products: []
             });
 
-            //交互，从后端传来的数据
+            //用户的头像和昵称
+            let User = reactive({
+                user:{}
+            })
+
+
+            //获取推荐列表中的数据
             allProduct().then(res=>{
                 ProductItems.products=res
             });
-
+            let testdata = reactive(
+                [
+                    {
+                        text:'商品1商品1商品1商品1商品1商品1商品1',
+                        detail:'黑色',
+                        price: 50,
+                        num:2,
+                        id:1,
+                        type:0,  //是否选中，0代表不选中，1代表选中并结算
+                        purchased:0  //是否购买，购买后改成1
+                    },{
+                    text:'商品2',
+                    detail:'黑色',
+                    price: 60,
+                    num:3,
+                    id:2,
+                    type:0,
+                    purchased:0
+                },{
+                    text:'商品3',
+                    detail:'黑色',
+                    price: 40,
+                    num:3,
+                    id:3,
+                    type:0,
+                    purchased:0
+                }
+                ]
+            );
             //换一组功能
             let Refresh = ()=>{
 
@@ -99,7 +173,9 @@
             };
             return{
                 ProductItems,
-                Refresh
+                Refresh,
+                testdata,
+                User
 
             }
         }

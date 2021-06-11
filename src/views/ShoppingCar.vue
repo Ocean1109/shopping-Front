@@ -26,76 +26,75 @@
         </el-menu>
         <!--搜索框-->
         <el-row :gutter="24">
-            <el-col :span="16"></el-col>
+            <el-col :span="16">
+                <div style="text-align: center;margin-top: 36px">
+                    <!--图标，返回主页-->
+                    <router-link to="/">
+                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                    </router-link>
+                </div>
+            </el-col>
             <el-col :span="6">
                 <div class="search_box">
-                    <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"></el-input>
+                    <el-input class="ipt" placeholder="搜索" clearable prefix-icon="el-icon-search"
+                              v-model="searchData.searchKey"></el-input>
                 </div>
             </el-col>
             <el-col :span="2">
                     <span style="float: left;margin-top: 60px;margin-left: 270px">
-                        <el-button icon="el-icon-search" circle @click="searchBtn"></el-button>
+                        <el-button icon="el-icon-search" circle @click="searchBtn(searchData.searchKey)"></el-button>
                     </span>
             </el-col>
         </el-row>
         <!--购物车中的商品-->
+
         <div class="ListBody">
             <h3 style="margin-top: 20px;margin-left: 20px;;margin-bottom: 20px">全部商品</h3>
-            <div style="text-align: right">
-                <el-button type="text" style="margin-right: 43px;font-size: 17px"
-                           icon="el-icon-folder-checked" @click="save">保存</el-button>\
-            </div>
-
             <hr>
             <!--购物车商品顶部-->
             <el-row :gutter="24">
                 <el-col :span="9">
                     <span>商品信息</span>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                     <span>单价</span>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                     <span>数量</span>
                 </el-col>
-                <el-col :span="5">
+                <el-col :span="4">
                     <span>金额</span>
+                </el-col>
+                <el-col :span="3">
+                    <span>操作</span>
                 </el-col>
             </el-row>
             <!--详细商品-->
-            <div class="product" v-for="item in testdata" :key="item">
+            <div>
+                <p id="Explain" style="height: 50px;line-height: 50px">{{Message}}</p>
+            </div>
+            <div class="product"  v-for="(item,index) in ShoppingCartProduct.Product" :id="forId(index)" :key="index">
                 <el-row>
-
-
-
-
-                    <!--
-                        !!!!!!!
-                        商品勾选框
-                        !!!!!!!
-                    -->
-
-
-
-
-
                     <el-col :span="1">
-
+                        <img src="../assets/image1.png" style="width: 10px;height: 10px" @click="Choose(forId(index),index)">
                     </el-col>
                     <el-col :span="3" style="height: 150px">
-                        <img src="../assets/image1.png" style="width: 130px;height: 130px;margin-top: 10px">
+                        <img :src="item.image" style="width: 130px;height: 130px;margin-top: 10px">
                     </el-col>
                     <el-col :span="5" style="height: 150px;text-align: left;line-height: 40px">
-                        <span>{{item.text}}</span>
+                        <span>{{item.name}}</span>
                     </el-col>
-                    <el-col :span="5" style="height: 150px">
+                    <el-col :span="4" style="height: 150px">
                         <span>{{item.price}}</span>
                     </el-col>
-                    <el-col :span="5" style="height: 150px">
-                        <el-input-number size="mini" v-model="item.num" :min="1"></el-input-number>
+                    <el-col :span="4" style="height: 150px">
+                        <el-input-number size="mini" v-model="item.productNumber" :min="1"></el-input-number>
                     </el-col>
-                    <el-col :span="5" style="height: 150px">
-                        <span>{{item.num*item.price}}</span>
+                    <el-col :span="4" style="height: 150px">
+                        <span>{{item.productNumber*item.price}}</span>
+                    </el-col>
+                    <el-col :span="3" style="height: 150px">
+                        <el-button id="ProductID" type="text" @click="Delete(index)">删除</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -103,36 +102,23 @@
 
         <!--底部结算栏-->
         <el-affix position="bottom" >
-
-
-
-            <!--
-                ！！！！！！
-                商品全选、删除、结算功能
-                ！！！！！！
-            -->
-
-
-
-
-
-
-
             <div class="Bottom">
-                <el-row :gutter="24" style="margin-right: 0px">
-                    <el-col :span="3">
-                        <span >全选</span>
+                <el-row :gutter="24" style="margin-right: 0px;margin-left: 0px">
+                    <el-col :span="3" style="background-color: #d1fffc" @click="ChooseAll()">
+                        <span>全选</span>
                     </el-col>
-                    <el-col :span="3">
-                        <span>删除</span>
+                    <el-col :span="3" style="background-color: #ebebeb" @click="Cancel()">
+                        <span>取消</span>
                     </el-col>
                     <el-col :span="3" :offset="9">
                         已选商品{{PurchaseNum}}件
                     </el-col>
                     <el-col :span="3">
-                        合计：
+                        合计：{{Amount}}
                     </el-col>
-                    <el-col :span="3" style="background-color: #f0cdd8" @click="pay">结算</el-col>
+                    <el-col :span="3" style="background-color: #f0cdd8" @click="pay()">
+                        <span>结算</span>
+                    </el-col>
                 </el-row>
             </div>
         </el-affix>
@@ -142,97 +128,164 @@
 
 <script>
     import {reactive,ref} from 'vue'
-    import {allProduct} from "../http/api";
+    import {useRoute, useRouter} from "vue-router";
+    import GLOBAL from "../components/GlobalVariable"
+    import {ShoppingUserToken,ShoppingDelete} from "../http/api";
+
     export default {
         name: "ShoppingCar",
 
         setup(){
-            //默认选中商品值
-            let PurchaseNum = ref(0);
-            let ChooseProduct = reactive(
-                {
-                    information:'',
-                    detail:'',
-                    price:null,
-                    num:null
-                }
-            )
-            let testdata = reactive(
-                [
-                    {
-                        text:'商品1商品1商品1商品1商品1商品1商品1',
-                        detail:'黑色',
-                        price: 50,
-                        num:2
-                    },{
-                    text:'商品2',
-                    detail:'黑色',
-                    price: 60,
-                    num:3
-                },{
-                    text:'商品3',
-                    detail:'黑色',
-                    price: 40,
-                    num:3
-                }
-                ]
-            );
 
-            //后台传来的购物车商品数据
-            let PurchaseItems = reactive(
-                {
-                    products: []
-                }
-            );
-
-            //建立传输
-            allProduct().then(res=>{
-                PurchaseItems.products=res
+            //声明购物车商品信息——从后端获取
+            let ShoppingCartProduct = reactive({
+                Product: []
             })
 
 
-            //商品勾选功能
-            let Choose=()=> {
-                PurchaseNum.value = PurchaseNum.value+1;
-                console.log('+1');
-                console.log(PurchaseNum.value)
+
+            //购物车中的修改数据
+            let ModifyData = reactive(
+                {
+                    operate:'',
+                    productId:'',
+                    token:'',
+                    num:''
+                }
+            )
+            //用户token
+            let usertoken = GLOBAL.token.value
+            const formData=new FormData()
+            formData.append("token",usertoken.toString())
+
+            ModifyData.token = usertoken;
+
+            let Message = ref();
+
+            //将用户token传递到后端，并且获取该用户购物车的信息
+            ShoppingUserToken(formData).then(res=>{
+                ShoppingCartProduct.Product = res;
+                console.log(ShoppingCartProduct.Product)
+                //判断购物车是否为空
+                if(ShoppingCartProduct.Product.length == 0){
+                    Message.value = "购物车为空"
+                }
+
+            })
+
+            //搜索关键词
+            let searchData = reactive({
+                searchKey:''
+            });
+
+            //创建路由，将关键字通过路由传递到其他页面
+            const router = useRouter();
+
+            //绑定提交事件
+            let searchBtn =(value)=>{
+                router.push({name:'Commodity', params:{productclass:value}})
+                console.log(value)
+            };
+
+            //默认选中商品值
+            let PurchaseNum = ref(0);
+            //默认支付的价格
+            let Amount = ref(0);
+
+            //获取支付页面传来的成功商品id，如果成功的话修改数据库，不成功的话不需要修改
+            const route = useRoute();
+            let ProductID = route.params.productId;
+
+            //修改计数器中的值————修改商品数量
+
+
+            //删除功能
+            let Delete =(index)=>{
+                console.log(ShoppingCartProduct.Product[index].id);
+                ModifyData.num = ShoppingCartProduct.Product[index].productNumber;
+                console.log(ModifyData.num)
+                ModifyData.operate=1;
+                ModifyData.productId = ShoppingCartProduct.Product[index].id;
+                console.log(ModifyData)
+                ShoppingDelete(ModifyData).then(res=>{
+                    ShoppingCartProduct.Product = res;
+                    console.log(res)
+                    console.log(ShoppingCartProduct.Product)
+                })
             }
 
-            //结算
-            let pay=()=>{
-                alert('结算');
+            //商品勾选功能
+            let Choose =(divId,index)=> {
+                //获取选中商品的id
+                let productid = document.getElementById(divId)
+                console.log(productid.id)
+                console.log(productid)
+                if (ShoppingCartProduct.Product[index].type==0){
+                    ShoppingCartProduct.Product[index].type=1;
+                    PurchaseNum.value = PurchaseNum.value+1;
+                    Amount.value = Amount.value + ShoppingCartProduct.Product[index].price*ShoppingCartProduct.Product[index].productNumber;
+                    productid.style.backgroundColor="#f0cdd8";
+                }else{
+                    ShoppingCartProduct.Product[index].type=0;
+                    PurchaseNum.value = PurchaseNum.value-1;
+                    Amount.value = Amount.value - ShoppingCartProduct.Product[index].price*ShoppingCartProduct.Product[index].productNumber;
+                    productid.style.backgroundColor="#ebebeb"
+                }
+            }
+
+            //全选功能
+            let ChooseAll =()=>{
+                for (let i=0;i<ShoppingCartProduct.Product.length;i++){
+                    ShoppingCartProduct.Product[i].type=1;
+                    PurchaseNum.value = PurchaseNum.value + 1;
+                    Amount.value = Amount.value + ShoppingCartProduct.Product[i].price*ShoppingCartProduct.Product[i].productNumber;
+                }
+            }
+
+            //取消功能，将所有选中的商品取消选中
+            let Cancel = ()=>{
+                for (let i=0;i<ShoppingCartProduct.Product.length;i++){
+                    ShoppingCartProduct.Product[i].type=0;
+                    PurchaseNum.value =0;
+                    Amount.value = 0;
+                }
+            }
+
+            //结算  统计选中的商品id
+            let pay =()=>{
+                // alert('结算');
                 //选中的商品进行标记  0为未购买  1为购买  购买后删除商品，将剩余数据传到后端
                 //弹出弹框，跳转页面
+                for (let i=0;i<ShoppingCartProduct.Product.length;i++){
+                    if (ShoppingCartProduct.Product[i].type==1){
+                        //将这些id发到后端
+                    }
+                }
+                router.push({name:'Payment'})
+
+
             }
 
             return{
-                testdata,
                 Choose,
                 PurchaseNum,
-                ChooseProduct,
                 pay,
-                PurchaseItems
+                Delete,
+                searchBtn,
+                searchData,
+                ProductID,
+                Amount,
+                ChooseAll,
+                Cancel,
+                usertoken,
+                ShoppingCartProduct,
+                Message,
+                ModifyData
             }
         },
-        methods: {
-            save() {
-                this.$confirm('是否保存修改?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '保存成功!'
-                        //将数据传给后端
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消保存'
-                    });
-                });
+        methods:{
+            forId:function (index) {
+                return "product" +index
             }
         }
     }

@@ -14,7 +14,7 @@
                           prefix-icon="el-icon-lock" v-model="RegisterData.userpwdCheck" show-password></el-input>
             </p>
             <p class="input_box">
-                <el-input class="ipt" placeholder="请输入姓名" style="border-radius: 20px"
+                <el-input class="ipt" placeholder="请输入昵称" style="border-radius: 20px"
                           prefix-icon="el-icon-user" v-model="RegisterData.username"></el-input>
             </p>
             <p class="input_box">
