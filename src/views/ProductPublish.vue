@@ -75,7 +75,7 @@
 </template>
 
 <script>
-    // import {reactive} from 'vue';
+    import GLOBAL from "../components/GlobalVariable"
     import {PublishProductInformation} from "../http/api";
 
     export default {
@@ -137,16 +137,17 @@
 
 
         Commit(){
+            let USerToken = GLOBAL.token.value;
             let formData=new FormData()
             formData.append("productImage",this.productImage[0].raw)
             for (let i=0;i<this.moreImages.length;i++){
                 formData.append("moreImages",this.moreImages[i].raw)
             }
-            formData.append("productDesc",this.ProductInformation.productDesc)
+          formData.append("productDesc",this.ProductInformation.productDesc)
           formData.append("productPrice",this.ProductInformation.productPrice)
           formData.append("productType",this.ProductInformation.productType)
           formData.append("brand",this.ProductInformation.brand)
-          formData.append("user","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNjIzNDIyMjAwLCJleHAiOjE2MjM1MDg2MDB9.72vzuSKlbRBHjqVNIZwZDhxG8SSnRH1JccP5RR4_VLjN0usMwCHQb29w169CRUyRUF0uWKDDSpDl8pKBVhdR4w")
+          formData.append("user",USerToken)
           formData.append("productAddress",this.ProductInformation.productAddress)
           formData.append("numbers",this.ProductInformation.numbers)
           formData.append("rule",this.ProductInformation.rule)
@@ -154,6 +155,7 @@
 
             PublishProductInformation(formData).then(res=>{
               console.log(res)
+
             }
             )
         }

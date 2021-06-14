@@ -14,9 +14,14 @@
             </el-menu-item>
             <el-menu-item index="3">联系我们</el-menu-item>
             <el-menu-item index="4">
-                <router-link to="/login" style="text-decoration: none">
-                    点击这里，登录
-                </router-link>
+                <div v-if="userToken==0">
+                    <router-link to="/login" style="text-decoration: none">
+                        点击这里，登录
+                    </router-link>
+                </div>
+                <div v-if="userToken!=0">
+                    <span>你好，{{UserName}}</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="5">
                 <router-link to="/register" style="text-decoration: none">
@@ -31,8 +36,17 @@
 </template>
 
 <script>
+    import GLOBAL from "../components/GlobalVariable"
     export default {
-        name: "Communication"
+        name: "Communication",
+        setup(){
+            let UserToken = GLOBAL.token.value;
+            let UserName = GLOBAL.userName.value;
+            return{
+                UserName,
+                UserToken
+            }
+        }
     }
 </script>
 

@@ -14,9 +14,14 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <router-link to="/login" style="text-decoration: none">
-                    点击这里，登录
-                </router-link>
+                <div v-if="usertoken==0">
+                    <router-link to="/login" style="text-decoration: none">
+                        点击这里，登录
+                    </router-link>
+                </div>
+                <div v-if="usertoken!=0">
+                    <span>你好，{{UserName}}</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="5">
                 <router-link to="/register" style="text-decoration: none">
@@ -76,7 +81,7 @@
             <div class="product"  v-for="(item,index) in ShoppingCartProduct.Product" :id="forId(index)" :key="index">
                 <el-row>
                     <el-col :span="1">
-                        <img src="../assets/image1.png" style="width: 10px;height: 10px" @click="Choose(forId(index),index)">
+                        <img id="choose" src="../assets/choose.png" style="width: 20px;height: 20px" @click="Choose(forId(index),index)">
                     </el-col>
                     <el-col :span="3" style="height: 150px">
                         <img :src="item.image" style="width: 130px;height: 130px;margin-top: 10px">
@@ -88,7 +93,7 @@
                         <span>{{item.price}}</span>
                     </el-col>
                     <el-col :span="4" style="height: 150px">
-                        <el-input-number size="mini" v-model="item.productNumber" :min="1"></el-input-number>
+                        <el-input-number size="mini" v-model="item.productNumber" :min="1" onchange="Change(current,old)"></el-input-number>
                     </el-col>
                     <el-col :span="4" style="height: 150px">
                         <span>{{item.productNumber*item.price}}</span>
@@ -142,8 +147,6 @@
                 Product: []
             })
 
-
-
             //购物车中的修改数据
             let ModifyData = reactive(
                 {
@@ -153,8 +156,9 @@
                     num:''
                 }
             )
-            //用户token
+            //用户token和用户名
             let usertoken = GLOBAL.token.value
+            let UserName = GLOBAL.userName.value;
             const formData=new FormData()
             formData.append("token",usertoken.toString())
 
@@ -181,6 +185,9 @@
             //创建路由，将关键字通过路由传递到其他页面
             const router = useRouter();
 
+            //声明支付状态，true代表成功支付
+            let PaymentState = false;
+
             //绑定提交事件
             let searchBtn =(value)=>{
                 router.push({name:'Commodity', params:{productclass:value}})
@@ -191,10 +198,6 @@
             let PurchaseNum = ref(0);
             //默认支付的价格
             let Amount = ref(0);
-
-            //获取支付页面传来的成功商品id，如果成功的话修改数据库，不成功的话不需要修改
-            const route = useRoute();
-            let ProductID = route.params.productId;
 
             //修改计数器中的值————修改商品数量
 
@@ -220,12 +223,15 @@
                 let productid = document.getElementById(divId)
                 console.log(productid.id)
                 console.log(productid)
+                //选中商品
                 if (ShoppingCartProduct.Product[index].type==0){
                     ShoppingCartProduct.Product[index].type=1;
                     PurchaseNum.value = PurchaseNum.value+1;
                     Amount.value = Amount.value + ShoppingCartProduct.Product[index].price*ShoppingCartProduct.Product[index].productNumber;
                     productid.style.backgroundColor="#f0cdd8";
-                }else{
+                }
+                //取消选中商品
+                else{
                     ShoppingCartProduct.Product[index].type=0;
                     PurchaseNum.value = PurchaseNum.value-1;
                     Amount.value = Amount.value - ShoppingCartProduct.Product[index].price*ShoppingCartProduct.Product[index].productNumber;
@@ -251,21 +257,52 @@
                 }
             }
 
+
+            //结算提交的订单数据
+            let OrderData = reactive({
+                token:'',
+                productIds:[]
+            })
+
             //结算  统计选中的商品id
             let pay =()=>{
-                // alert('结算');
-                //选中的商品进行标记  0为未购买  1为购买  购买后删除商品，将剩余数据传到后端
-                //弹出弹框，跳转页面
+                OrderData.token = usertoken;
                 for (let i=0;i<ShoppingCartProduct.Product.length;i++){
                     if (ShoppingCartProduct.Product[i].type==1){
-                        //将这些id发到后端
+                        //添加数组数据
+                        OrderData.productIds.push(ShoppingCartProduct.Product[i].id)
                     }
                 }
-                router.push({name:'Payment'})
-
+                //将订单信息提交到支付界面
+                console.log(OrderData)
+                router.push({name:'Payment', params:{order:OrderData}})
 
             }
 
+            //获取支付页面传来的成功状态，作为保存
+            const route = useRoute();
+            PaymentState = route.params.State;
+
+            //将成功支付的商品删除
+            if (PaymentState == true){
+                for (let i=0;i<OrderData.productIds.length;i++){
+                    ModifyData.productId = OrderData.productIds[i];
+                    ModifyData.num = 1;
+                    ModifyData.operate=1;
+                    ShoppingDelete(ModifyData).then(res=>{
+                        ShoppingCartProduct.Product = res;
+                    })
+                }
+            }
+
+            //选择器里面的值改变触发的函数
+            let Change=(current,old)=>{
+                if (current - old >0){
+                    console.log("增加了商品")
+                }else if(current - old < 0){
+                    console.log("减少了商品")
+                }
+            }
             return{
                 Choose,
                 PurchaseNum,
@@ -273,14 +310,17 @@
                 Delete,
                 searchBtn,
                 searchData,
-                ProductID,
+                PaymentState,
                 Amount,
                 ChooseAll,
                 Cancel,
                 usertoken,
                 ShoppingCartProduct,
                 Message,
-                ModifyData
+                ModifyData,
+                Change,
+                UserName,
+                OrderData
             }
         },
         methods:{

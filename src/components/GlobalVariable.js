@@ -1,9 +1,6 @@
 import {ref} from "vue"
 const token = ref(0);
-var AllStyle = false;
-var BeforePaymentStyle = false;
+const userName = ref(0);
 export default {
-    token,
-    AllStyle,
-    BeforePaymentStyle
+    token,userName
 }

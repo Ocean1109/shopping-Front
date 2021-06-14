@@ -18,9 +18,14 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <router-link to="/login" style="text-decoration: none">
-                    点击这里，登录
-                </router-link>
+                <div v-if="UserToken==0">
+                    <router-link to="/login" style="text-decoration: none">
+                        点击这里，登录
+                    </router-link>
+                </div>
+                <div v-if="UserToken!=0">
+                    <span>你好，{{UserName}}</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="5">
                 <router-link to="/register" style="text-decoration: none">
@@ -60,7 +65,7 @@
                             <p style="text-align: left;margin-left: 30px;margin-top: 30px;line-height: 75px">
                                 品牌：
                                 <span v-for="item in Type"  :key="item"
-                                    @click="ChooseType(item.value)">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                      @click="ChooseType(item.value)">{{item.value}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </p>
                             <p style="text-align: left;margin-left: 30px;margin-top: 30px;margin-bottom: 50px">
                                 选择发货地址：
@@ -74,9 +79,10 @@
                                 <el-header style="height: 0px"></el-header>
                                 <el-main>
                                     <div class="Product">
-                                        <el-col :span="4" v-for="product in ProductItems.products" :key="product.id">
+                                        <el-col :span="8" v-for="product in ProductItems.products" :key="product.id">
+
                                             <img :src="product.productImage" style="height: 150px;width: 150px">
-                                            <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
+                                            <p style="text-align: left;margin-left: 20px">{{product.productDesc.substring(0,30)}}</p>
                                             <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
                                         </el-col>
                                     </div>
@@ -93,24 +99,9 @@
                             <p>{{item.text}}</p>
                             <p>{{item.price}}</p>
                         </div>
-                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                     </div>
                 </el-col>
-                <el-col :span="1">
-                    <a :href={Url} style="position:fixed;">返回顶部</a>
-                    <!--
-
-
-
-                        ！！！！！！
-                        瞄点
-                        ！！！！！！
-
-
-
-                    -->
-                </el-col>
+                <el-col :span="1"></el-col>
             </el-row>
         </div>
 
@@ -122,11 +113,15 @@
     import {reactive} from "vue";
     import {useRoute, useRouter} from 'vue-router';
     import {ProductListOne,ProductListTwo,ProductListThree} from "../http/api";
+    import GLOBAL from "../components/GlobalVariable"
 
     export default {
         name: "CommodityList",
         setup(){
 
+            //用户token和用户名
+            let UserToken = GLOBAL.token.value
+            let UserName = GLOBAL.userName.value;
             //搜索关键词
             let searchData = reactive({
                 searchKey:''
@@ -146,8 +141,6 @@
                 console.log(value)
             };
 
-            //获取当前页面的URL
-            let Url = location.href;
 
             //获取主页传来的类别数据
             const route = useRoute();
@@ -155,9 +148,8 @@
 
             //按照分类获取数据
             ProductListOne(classify).then(res=> {
-                ProductItems.products = res
-
-            }
+                    ProductItems.products = res
+                }
             )
 
             //按照分类中的类别获取数据
@@ -280,9 +272,10 @@
                 testdata2,
                 ChooseAddress,
                 ChooseType,
-                Url,
                 searchData,
-                searchBtn
+                searchBtn,
+                UserToken,
+                UserName
 
             }
         }

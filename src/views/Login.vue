@@ -28,7 +28,7 @@
   import { ElMessage } from 'element-plus'
   import {login} from '../http/api'
   import router from "../router";
-  import GOLBAL from "../components/GlobalVariable"
+  import GLOBAL from "../components/GlobalVariable"
   export default {
     name:'Login',
     setup(){
@@ -50,7 +50,8 @@
         login(data).then(res=>{
           if (res.code===0){
             ElMessage.success('登陆成功');
-            GOLBAL.token.value = res.message;
+            GLOBAL.token.value = res.message;
+            GLOBAL.userName.value = res.userName;
             console.log(res.message)
             router.push({path:'/'})
 

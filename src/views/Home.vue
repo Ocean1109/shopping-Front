@@ -19,9 +19,14 @@
         </router-link>
       </el-menu-item>
       <el-menu-item index="4">
+        <div v-if="UserToken==0">
         <router-link to="/login" style="text-decoration: none">
           点击这里，登录
         </router-link>
+      </div>
+        <div v-if="UserToken!=0">
+          <span>你好，{{UserName}}</span>
+        </div>
       </el-menu-item>
       <el-menu-item index="5">
         <router-link to="/register" style="text-decoration: none">
@@ -129,7 +134,7 @@
           <div class="ListBody">
             <el-col :span="4" v-for="product in ProductItems.products" :key="product.id">
               <img :src="product.productImage" style="height: 150px;width: 150px">
-              <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
+              <p style="text-align: left;margin-left: 20px">{{product.productDesc.substring(0,30)}}</p>
               <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
             </el-col>
           </div>
@@ -144,6 +149,7 @@
   import {reactive} from 'vue'
   import {allProduct} from "../http/api"
   import {useRouter} from 'vue-router';
+  import GLOBAL from "../components/GlobalVariable"
   export default{
 
     name: 'Home',
@@ -152,6 +158,10 @@
       let searchData = reactive({
         searchKey:''
       });
+
+      //用户token和用户名
+      let UserToken = GLOBAL.token.value;
+      let UserName = GLOBAL.userName.value;
 
       //分类数组
       let ProductCategory1 = reactive(
@@ -198,6 +208,7 @@
         ProductItems.products=res
       })
 
+
       //创建路由，将关键字通过路由传递到其他页面
       const router = useRouter();
       //绑定提交事件
@@ -222,6 +233,8 @@
         ProductCategory3,
         ProductCategory4,
         ProductCategory5,
+        UserToken,
+        UserName
       }
     }
   }

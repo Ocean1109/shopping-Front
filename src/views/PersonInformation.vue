@@ -11,8 +11,7 @@
                     </el-col>
                     <el-col :span="10">
                         <div>
-                            我是谁？北邮隆哥
-                            {{User.user.username}}
+                            {{UserName}}
                         </div>
                     </el-col>
                     <el-col :span="8">
@@ -63,7 +62,7 @@
                             <img src="../assets/image1.png" style="width: 130px;height: 130px;margin-top: 10px">
                         </el-col>
                         <el-col :span="5" :offset="1" style="height: 150px;text-align: left;line-height: 40px">
-                            <span>{{item.text}}</span>
+                            <span>{{item.text.substring(0,30)}}</span>
                         </el-col>
                         <el-col :span="4" style="height: 150px;line-height: 150px">
                             <span>{{item.price}}</span>
@@ -105,7 +104,7 @@
                 <div style="background-color: #f5f8fa">
                     <el-col :span="4" v-for="product in ProductItems.products" :key="product.id">
                         <img :src="product.productImage" style="height: 150px;width: 150px">
-                        <p style="text-align: left;margin-left: 20px">{{product.productDesc}}</p>
+                        <p style="text-align: left;margin-left: 20px">{{product.productDesc.substring(0,30)}}</p>
                         <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
                     </el-col>
                 </div>
@@ -117,6 +116,8 @@
 <script>
     import {reactive} from 'vue'
     import {allProduct} from "../http/api";
+    import GLOBAL from '../components/GlobalVariable'
+
     export default {
         name: "PersonInformation",
         setup(){
@@ -126,10 +127,8 @@
                 products: []
             });
 
-            //用户的头像和昵称
-            let User = reactive({
-                user:{}
-            })
+            //用户的token和用户名
+            let UserName = GLOBAL.userName.value;
 
 
             //获取推荐列表中的数据
@@ -175,7 +174,7 @@
                 ProductItems,
                 Refresh,
                 testdata,
-                User
+                UserName,
 
             }
         }

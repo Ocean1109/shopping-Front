@@ -42,8 +42,24 @@ export const ShoppingDelete = (data)=>{
     return $http.post('/ShoppingCart',data)
 }
 
+//结算生成订单
+export const GenerateOrder = (data)=>{
+    return $http.post('/generateOrder',data)
+}
+
 //发布商品
 //上传商品图片文件
 export const PublishProductInformation = (file)=>{
     return $http.post('/release',file,{'Content-Type':'multipart/form-data'})
+}
+
+//用户收货地址
+//修改用户收货地址
+export const ModifyUserInfo = (data)=>{
+    return $http.post('/UpdateUserInfo',data)
+}
+
+//获取用户收货地址
+export const GetUserAddress = (token)=>{
+    return $http.post('/ShowUserInfo',token,{'Content-Type':'multipart/form-data'})
 }

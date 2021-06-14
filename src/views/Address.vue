@@ -8,107 +8,102 @@
         <div style="margin-top: 30px">
             <p style="margin-left: 10px">新增收货地址</p>
             <el-form-item>地址信息
-                <el-input class="Ipt" v-model="AddressData.Province" placeholder="请输入省/市/区/街道"></el-input>
+                <el-input class="Ipt" v-model="AddressData.address" placeholder="请输入省/市/区/街道"></el-input>
             </el-form-item>
-            <el-form-item>详细地址
-                <el-input class="Ipt" v-model="AddressData.AddressInformation" placeholder="请输入详细地址信息"></el-input>
-            </el-form-item>
-            <el-form-item>收货人姓名
-                <el-input style="margin-left: 17px;width: 300px" v-model="AddressData.UserName" id="username"
-                          placeholder="长度不超过25个字"></el-input>
-            </el-form-item>
-            <el-form-item>电话号码
-                <el-input class="Ipt" v-model="AddressData.UserPhone" id="userphone" placeholder="11位手机号"></el-input>
-            </el-form-item>
-            <el-button style="margin-left: 95px" type="primary" @click="SaveBtn">保存</el-button>
+
+            <el-button style="margin-left: 95px;margin-bottom: 100px" type="primary" @click="SaveBtn">保存</el-button>
         </div>
 
-        <el-table :data="tableData" border style="width: 100%">
-            <el-table-column prop="name" label="收货人" width="180">
-            </el-table-column>
-            <el-table-column prop="province" label="所在地区" width="180">
-            </el-table-column>
-            <el-table-column prop="address" label="详细地址">
-            </el-table-column>
-            <el-table-column prop="phone" label="电话号">
-            </el-table-column>
-        </el-table>
+        <div>
+            <el-row style="margin-top: 30px">
+                <el-col :span="8" style="text-align: center">
+                    <span>收货人</span>
+                </el-col>
+                <el-col :span="8" style="text-align: center">
+                    <span>收货地址</span>
+                </el-col>
+                <el-col :span="8" style="text-align: center">
+                    <span>手机号</span>
+                </el-col>
+            </el-row>
+            <el-row style="margin-top: 30px">
+                <el-col :span="8" style="text-align: center">
+                    {{AddressTable.Name}}
+                </el-col>
+                <el-col :span="8" style="text-align: center">
+                    {{AddressTable.Address}}
+                </el-col>
+                <el-col :span="8" style="text-align: center">
+                    {{AddressTable.phone}}
+                </el-col>
+            </el-row>
+        </div>
+
     </div>
 </template>
 
 <script>
-    import {reactive} from "vue"
+    import {reactive,ref} from "vue"
     import {ElMessage} from "element-plus";
-    import {login} from "../http/api";
-    import router from "../router";
+    import {ModifyUserInfo,GetUserAddress} from "../http/api";
+    import GLOBAL from "../components/GlobalVariable"
 
     export default {
         name: "Address",
         setup(){
 
+            //接收后端传来的数据
             let AddressTable = reactive({
-                    addresstable:[]
-                }
-            )
-            //测试数据
-            let tableData = reactive([
-                {
-                    name: '张三',
-                    province: '北京',
-                    address: '海淀',
-                    phone: '11111111'
-                },  {
-                    name: '李四',
-                    province: '天津',
-                    address: '河西',
-                    phone: '22222222'
-                },  {
-                    name: '王五',
-                    province: '河北',
-                    address: '石家庄',
-                    phone: '11111111'
-                } ,{
-                    name: '赵六',
-                    province: '山东',
-                    address: '济南',
-                    phone: '11111111'
-                }])
+                Name:'',
+                Address:'',
+                phone:''
+            })
 
-            let AddressData = reactive({
-                Province:'',
-                AddressInformation:'',
-                UserName:'',
-                UserPhone:''
+            //获取用户名
+            let UserToken = GLOBAL.token.value
+            let UserName = GLOBAL.userName.value
+
+            //设置地址显示状态——获取地址后才显示
+            let State = ref(0);
+
+            //获取用户地址信息
+            let formData=new FormData()
+            formData.append("token",UserToken)
+            GetUserAddress(formData).then(res=>{
+                console.log(res)
+                AddressTable.Name = res.userName;
+                AddressTable.Address = res.address;
+                AddressTable.phone = res.tel;
+                console.log(AddressTable)
+                State = 1;
             })
 
 
+            //传给后端的数据
+            let AddressData = reactive({
+                token:'',
+                tel:'',
+                password:'',
+                userName:'',
+                address:'',
+                age:'',
+                gender:'',
+            })
 
-            //后续进行修改
+            //修改或添加用户收货地址
             let SaveBtn = ()=>{
-                //后端属性名
-                let data={"province":AddressData.Province,"address":AddressData.password,
-                    "name":AddressData.UserName,"phone":AddressData.UserPhone};
-                if (AddressData.UserName.length<=0){
-                    ElMessage.error('用户名长度必须大于0');
-                    document.getElementById('username').value="";
-                    return
-                }
-                else if(AddressData.UserName.length>25){
-                    ElMessage.error('用户名长度必须小于25');
-                    document.getElementById('username').value="";
-                    return
-                }
-                //未做正则判断
-                else if(AddressData.UserPhone.length != 11){
-                    ElMessage.error('手机号不符合规范');
-                    document.getElementById('userphone').value="";
-                    return
-                }
+                //定义数据
+                AddressData.userName = UserName;
+                AddressData.tel = null;
+                AddressData.age = null;
+                AddressData.gender = null;
+                AddressData.password = 123456;
+                AddressData.token = UserToken;
+
                 //返回数据并且刷新页面添加数据
-                login(data).then(res=> {
+                ModifyUserInfo(AddressData).then(res=> {
                     if(res.code === 0){
                         ElMessage.success('创建成功');
-                        router.push({path:'/'})
                     }else{
                         alert(res.message)
                     }
@@ -119,8 +114,10 @@
             return{
                 AddressData,
                 SaveBtn,
-                tableData,
-                AddressTable
+                AddressTable,
+                UserName,
+                UserToken,
+                State
             }
         }
     }

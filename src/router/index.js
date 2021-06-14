@@ -99,6 +99,45 @@ const routes = [
           isShow:true,
           title:'查看我的订单'
         },
+        children:[
+          {
+            //所有订单
+            path: '/AllOrder',
+            name:'AllOrder',
+            meta:{
+              isShow:true,
+              title:'所有订单'
+            },
+            component:()=>import('../views/OrderStyle/AllOrder')
+          },{
+            //待发货
+            path: '/BeforeSign',
+            name:'BeforeSign',
+            meta:{
+              isShow:true,
+              title:'待发货'
+            },
+            component:()=>import('../views/OrderStyle/BeforeSign')
+          },{
+            //待收货
+            path: '/AfterSign',
+            name:'AfterSign',
+            meta:{
+              isShow:true,
+              title:'待收货'
+            },
+            component:()=>import('../views/OrderStyle/AfterSign')
+          },{
+            //待评价
+            path: '/AfterEvaluate',
+            name:'AfterEvaluate',
+            meta:{
+              isShow:true,
+              title:'待评价'
+            },
+            component:()=>import('../views/OrderStyle/AfterEvaluate')
+          }
+        ],
         component: ()=> import('../views/OrderHistory')
       },{
         //商品发布

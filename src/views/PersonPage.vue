@@ -14,9 +14,14 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <router-link to="/login" style="text-decoration: none">
-                    点击这里，登录
-                </router-link>
+                <div v-if="userToken==0">
+                    <router-link to="/login" style="text-decoration: none">
+                        点击这里，登录
+                    </router-link>
+                </div>
+                <div v-if="userToken!=0">
+                    <span>你好，{{UserName}}</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="5">
                 <router-link to="/register" style="text-decoration: none">
@@ -61,12 +66,14 @@
         name: "PersonPage",
 
         setup(){
+            //用户token和用户名
             let userToken = GLOBAL.token.value;
-            console.log(userToken)
+            let UserName = GLOBAL.userName.value;
             let TableList = router.options.routes[6].children;
             return{
                 TableList,
-                userToken
+                userToken,
+                UserName
             }
         },
 
