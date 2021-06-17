@@ -119,3 +119,8 @@ export const ListChat=(token)=>{
 export const ListChatDetail=(chatId)=>{
     return $http.get(`/chat/${chatId}`)
 }
+
+//创建新的聊天
+export const CreateChat = (data)=>{
+    return $http.post('/newChat',data,{'Content-Type':'multipart/form-data'})
+}

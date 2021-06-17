@@ -67,7 +67,8 @@
                                 <!--图片-->
                                 <el-col :span="11" :offset="2" style="margin-top: 30px">
                                     <img :src="DetailProduct.product.productImage" style="width: 300px;height: 300px">
-                                    <el-button type="text" @click="ChatSeller(DetailProduct.product.publishUserId)">联系卖家</el-button>
+                                    <el-button type="text"
+                                               @click="ChatSeller(DetailProduct.product.publishUserId,DetailProduct.product.id)">联系卖家</el-button>
                                 </el-col>
                                 <!--商品选购栏-->
                                 <el-col :span="11" style="margin-top: 30px;margin-left: 50px">
@@ -133,7 +134,7 @@
     import {useRoute, useRouter} from "vue-router";
     import {reactive,ref} from "vue";
     import GLOBAL from "../components/GlobalVariable";
-    import {allProduct, GetDetailProductInfo, SearchProduct, ShoppingAdd} from "../http/api";
+    import {allProduct, GetDetailProductInfo, SearchProduct, ShoppingAdd, CreateChat} from "../http/api";
     import {ElMessage} from "element-plus";
 
     export default {
@@ -235,8 +236,24 @@
             }
 
             //联系卖家
-            let ChatSeller = (id,chatid)=>{
-                router.push({name:'ChatRoom', params:{CellerUserId:id,ChatId:chatid}})
+            let ChatSeller = (userid,productid)=>{
+                let formdata = new FormData()
+                formdata.append("businessId",userid)
+                formdata.append("token",UserToken)
+                formdata.append("productId",productid)
+                let chatid = ""
+                CreateChat(formdata).then(res=>{
+                    if (res === -1){
+                        ElMessage.error('卖买家不能是一个人');
+                    }
+                    else {
+                        chatid = res
+                        router.push({name:'ChatRoom', params:{CellerUserId:userid,ChatId:chatid}})
+                    }
+
+                })
+
+
             }
 
             return{
