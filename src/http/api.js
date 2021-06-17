@@ -114,3 +114,8 @@ export const SearchProduct = (name)=>{
 export const ListChat=(token)=>{
     return $http.get('/chat',{headers:{'ownToken':token}})
 }
+
+//获取历史聊天信息
+export const ListChatDetail=(chatId)=>{
+    return $http.get(`/chat/${chatId}`)
+}

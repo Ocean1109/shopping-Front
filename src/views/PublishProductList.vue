@@ -28,7 +28,7 @@
                     <span>{{product.productPrice}}</span>
                 </el-col>
                 <el-col :span="4">
-                    <span @click="DeletePublishedProduct(product.id)">删除商品</span>
+                    <el-button type="text" @click="DeletePublishedProduct(product.id)">删除商品</el-button>
                 </el-col>
             </el-row>
         </div>

@@ -5,7 +5,7 @@
                 <el-row style="line-height: 54px">
                     <el-col :span="3" :offset="3">
                         <div>
-                            <img src="../assets/image1.png" style="border-radius: 50px;width: 50px;height: 50px">
+                            <img src="../assets/CircleHeadPortrait.jpg" style="border-radius: 50px;width: 50px;height: 50px">
                         </div>
                     </el-col>
                     <el-col :span="10">

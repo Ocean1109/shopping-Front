@@ -110,10 +110,10 @@
             <div class="Bottom">
                 <el-row :gutter="24" style="margin-right: 0px;margin-left: 0px">
                     <el-col :span="3" style="background-color: #d1fffc" @click="ChooseAll()">
-                        <span>全选</span>
+                        <el-button type="text" style="color: black;font-size: 15px">全选</el-button>
                     </el-col>
                     <el-col :span="3" style="background-color: #ebebeb" @click="Cancel()">
-                        <span>取消</span>
+                        <el-button type="text" style="color: black;font-size: 15px">取消</el-button>
                     </el-col>
                     <el-col :span="3" :offset="9">
                         已选商品{{PurchaseNum}}件
@@ -122,7 +122,7 @@
                         合计：{{Amount}}
                     </el-col>
                     <el-col :span="3" style="background-color: #f0cdd8" @click="pay()">
-                        <span>结算</span>
+                        <el-button type="text" style="color: black;font-size: 15px">结算</el-button>
                     </el-col>
                 </el-row>
             </div>

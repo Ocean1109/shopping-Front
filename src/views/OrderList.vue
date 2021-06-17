@@ -56,7 +56,7 @@
                 </el-col>
                 <el-col :span="2">
                     <div>
-                        <span @click="SentProduct(order.tradeStatus,order.orderProductId)">确认发货</span>
+                        <el-button type="text" style="color: black" @click="SentProduct(order.tradeStatus,order.orderProductId)">确认发货</el-button>
                     </div>
                 </el-col>
             </el-row>

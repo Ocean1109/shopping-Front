@@ -9,6 +9,7 @@ import PersonPage from "../views/PersonPage";
 import Payment from "../views/Payment";
 import DetailProductInfo from "../views/DetailProductInfo"
 import SearchProductList from "../views/SearchProductList";
+import ChatRoom from "../views/ChatRoom";
 
 const routes = [
   {
@@ -148,6 +149,11 @@ const routes = [
     path:'/SearchProductList',
     name:'SearchProductList',
     component:SearchProductList
+  },{
+    //聊天室
+    path:'/ChatRoom',
+    name:'ChatRoom',
+    component:ChatRoom
   }
 
 ]

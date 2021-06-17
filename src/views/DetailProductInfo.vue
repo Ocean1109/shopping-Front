@@ -67,6 +67,7 @@
                                 <!--图片-->
                                 <el-col :span="11" :offset="2" style="margin-top: 30px">
                                     <img :src="DetailProduct.product.productImage" style="width: 300px;height: 300px">
+                                    <el-button type="text" @click="ChatSeller(DetailProduct.product.publishUserId)">联系卖家</el-button>
                                 </el-col>
                                 <!--商品选购栏-->
                                 <el-col :span="11" style="margin-top: 30px;margin-left: 50px">
@@ -179,6 +180,7 @@
             //获取商品各种数据
             GetDetailProductInfo(ProductId).then(res=>{
                 DetailProduct.product = res;
+                console.log(res)
             })
 
             //商品选择的数量，购买或者加入购物车
@@ -232,6 +234,11 @@
                 router.push({name:'Payment', params:{order:OrderDataString,Page:1}})
             }
 
+            //联系卖家
+            let ChatSeller = (id,chatid)=>{
+                router.push({name:'ChatRoom', params:{CellerUserId:id,ChatId:chatid}})
+            }
+
             return{
                 searchBtn,
                 searchData,
@@ -244,7 +251,8 @@
                 ShoppingCart,
                 PayementData,
                 Payment,
-                HomeProductItems
+                HomeProductItems,
+                ChatSeller
 
             }
         }

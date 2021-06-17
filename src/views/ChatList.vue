@@ -6,18 +6,13 @@
                 <el-menu
                         default-active="2"
                         class="el-menu-vertical-demo">
-                    <el-menu-item index="1">
-                        <template #title>导航二</template>
+                    <div v-for="(item,index) in ChatRoomList.list" :key="index">
+                    <el-menu-item>
+                        <router-link to="/ChatRoom" style="text-decoration: none" @click="ChatSeller(item.anotherUserId,item.id)">
+                            To:  {{item.anotherUserName}}
+                        </router-link>
                     </el-menu-item>
-                    <el-menu-item index="2">
-                        <template #title>导航二</template>
-                    </el-menu-item>
-                    <el-menu-item index="3">
-                        <template #title>导航三</template>
-                    </el-menu-item>
-                    <el-menu-item index="4">
-                        <template #title>导航四</template>
-                    </el-menu-item>
+                    </div>
                 </el-menu>
             </el-col>
 
@@ -27,20 +22,38 @@
 
 <script>
     import {ListChat} from "../http/api";
+    import {reactive} from "vue"
     import GLOBAL from  "../components/GlobalVariable"
+    import {useRouter} from "vue-router";
     export default {
         name: "ChatList",
         setup(){
             //获取用户名
             let UserToken = GLOBAL.token.value
-            console.log(UserToken)
+
+            //获取聊天列表
+            let ChatRoomList = reactive({
+                list:[],
+            })
+
+            //创建路由，将关键字通过路由传递到其他页面
+            const router = useRouter();
 
             //获取聊天列表
             ListChat(UserToken).then(res=>{
-                console.log(res)
+                ChatRoomList.list = res
+                console.log(ChatRoomList.list)
             })
+
+            //联系商家，跳转页面
+            let ChatSeller =(userid,chatid)=>{
+                router.push({name:'ChatRoom', params:{CellerUserId:userid,ChatId:chatid}})
+            }
+
             return{
-                UserToken
+                UserToken,
+                ChatRoomList,
+                ChatSeller
             }
         }
     }

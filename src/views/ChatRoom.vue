@@ -1,4 +1,6 @@
 <template>
+  <div class="ListBody">
+    {{list}}
   <div class="chat-box">
     <div class="msg-box" ref="msg-box">
       <div
@@ -16,21 +18,85 @@
       <div class="btn" :class="{['btn-active']:contentText}" @click="sendText()">发送</div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
 
-
+  import GLOBAL from  "../components/GlobalVariable"
+  import {useRoute} from "vue-router";
+  import {onMounted, getCurrentInstance} from  "vue"
+  import {ListChatDetail} from "../http/api"
+  import {reactive} from "vue"
   export default {
     data() {
       return {
         ws: null,
-        userId:1, // 当前用户ID
-        username: "ocean", // 当前用户昵称
+        userId:'', // 当前用户ID,实际是token
+        username: "", // 当前用户昵称
         list: [], // 聊天记录的数组
         contentText: "",// input输入的值
-        receiveUser:0,//要联系的用户
+        receiveUser:"",//要联系的用户
+        chatId:""  //聊天id
       };
+    },
+
+    setup(){
+
+      //获取其他页面传来的对话用户ID
+      const route = useRoute();
+      let SellerId = route.params.CellerUserId;
+      let ChatId = route.params.ChatId;
+
+      //修改data()里的数据
+      onMounted(()=>{
+        instance.data.receiveUser = SellerId;
+        instance.data.userId = UserToken;
+        instance.data.username = UserName;
+        instance.data.chatId = ChatId;
+        for (let i=0;i<HistoryChat.history.length;i++){
+          // instance.data.list[i] = "userId:"+HistoryChat.id[i]+ "username:"+HistoryChat.username[i]+ "content:" +HistoryChat.content[i]
+          instance.data.list.push({userId: HistoryChat.id[i], username: HistoryChat.username[i],
+            content: HistoryChat.content[i] })
+        }
+        console.log(instance.data.list)
+      })
+
+      const  instance = getCurrentInstance()
+      //用户token和用户名
+      let UserToken = GLOBAL.token.value;
+      let UserName = GLOBAL.userName.value;
+
+      //获取历史聊天记录
+      let HistoryChat = reactive({
+        history:[],
+        content:[],
+        username:[],
+        id:[]
+      });
+
+      //获取之前的聊天记录
+      ListChatDetail(ChatId).then(res=>{
+        HistoryChat.history = res
+        for (let i=0;i<HistoryChat.history.length;i++){
+          HistoryChat.content[i] = HistoryChat.history[i].content;
+          HistoryChat.username[i] = HistoryChat.history[i].userName;
+          HistoryChat.id[i] = HistoryChat.history[i].userId;
+        }
+
+
+        console.log(HistoryChat.history)
+        console.log(HistoryChat.username)
+        console.log(HistoryChat.content)
+        console.log(HistoryChat.id)
+      })
+
+      return{
+        UserName,
+        UserToken,
+        SellerId,
+        HistoryChat
+      }
     },
     mounted() {
       this.initWebSocket();
@@ -71,10 +137,9 @@
         let _this = this;
         // 判断页面有没有存在websocket连接
         if (window.WebSocket) {
-          var serverHot =  window.location.hostname;
-          let sip = 1
+          //var serverHot =  window.location.hostname;
           // 填写本地IP地址 此处的 :8181端口号 要与后端配置的一致！
-          var url = 'ws://' + serverHot + ':8181' + '/send/' + sip + '/' + this.userId; // `ws://127.0.0.1/9101/groupChat/10086/聊天室`
+          var url = 'ws://' + "10.128.207.84" + ':8181' + '/send/' + this.chatId + '/' + this.userId; // `ws://127.0.0.1/9101/groupChat/10086/聊天室`
           let ws = new WebSocket(url);
           _this.ws = ws;
           ws.onopen = function() {
@@ -106,8 +171,30 @@
 </script>
 
 <style lang="scss" scoped>
+  body {
+    background: #b1eb83;
+    font-family: "Helvetica Neue", "Hiragino Sans GB", "Microsoft YaHei", "\9ED1\4F53", Arial, sans-serif;
+    color: #222;
+    font-size: 12px;
+  }
+
+  * {
+    padding: 0px;
+    margin: 0px;
+  }
+  .ListBody{
+    width: 100%;
+    height: 100%;
+    position:fixed;
+    background-size:100% 100%;
+    background-color: #ffeef4;
+    background-image: linear-gradient(0deg, #ffeef4 0%, #d1fffc 100%);
+    top:0px;
+    left: 0px;
+    overflow:scroll
+  }
   .chat-box {
-    margin: 0 auto;
+    margin: 100px auto;
     background: #fafafa;
     position: absolute;
     height: 100%;
