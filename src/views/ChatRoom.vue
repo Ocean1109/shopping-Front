@@ -1,8 +1,18 @@
 <template>
   <div class="ListBody">
     {{list}}
+
   <div class="chat-box">
     <div class="msg-box" ref="msg-box">
+      <div
+              v-for="(i,index) in tempList.List"
+              :key="index"
+              class="msg"
+              :style="i.userId == userId?'flex-direction:row-reverse':''">
+        <div class="user-msg">
+          <span :style="i.userId == userId?' float: right;':''" :class="i.userId == userId?'right':'left'">{{i.content}}</span>
+        </div>
+      </div>
       <div
               v-for="(i,index) in list"
               :key="index"
@@ -41,6 +51,17 @@
       };
     },
 
+    // created() {
+    //
+    //   console.log(1)
+    //   console.log(this.chatId)
+    //   //获取之前的聊天记录
+    //   ListChatDetail(this.chatId).then(res=>{
+    //
+    //     this.list=res
+    //     console.log(this.list)
+    //   })
+    // },
     setup(){
 
       //获取其他页面传来的对话用户ID
@@ -48,18 +69,52 @@
       let SellerId = route.params.CellerUserId;
       let ChatId = route.params.ChatId;
 
+      let tempList = reactive({
+        List:[]
+      })
+
+      ListChatDetail(ChatId).then(res=>{
+        tempList.List=res
+      })
+
+      console.log(tempList.List)
+      // //获取历史聊天记录
+      // let HistoryChat = reactive({
+      //   history:[],
+      //   content:[],
+      //   username:[],
+      //   id:[],
+      //   List:[]
+      // });
+      //
+      // //获取之前的聊天记录
+      // ListChatDetail(ChatId).then(res=>{
+      //   HistoryChat.history = res
+      //   for (let i=0;i<HistoryChat.history.length;i++){
+      //     HistoryChat.content[i] = HistoryChat.history[i].content;
+      //     HistoryChat.username[i] = HistoryChat.history[i].userName;
+      //     HistoryChat.id[i] = HistoryChat.history[i].userId;
+      //     HistoryChat.List[i] = "userId: "+HistoryChat.id[i]+ " username: "+HistoryChat.username[i]+ " content: " +HistoryChat.content[i]
+      //   }
+      //   console.log(HistoryChat.List)
+      // })
+
       //修改data()里的数据
       onMounted(()=>{
         instance.data.receiveUser = SellerId;
         instance.data.userId = UserToken;
         instance.data.username = UserName;
         instance.data.chatId = ChatId;
-        for (let i=0;i<HistoryChat.history.length;i++){
-          // instance.data.list[i] = "userId:"+HistoryChat.id[i]+ "username:"+HistoryChat.username[i]+ "content:" +HistoryChat.content[i]
-          instance.data.list.push({userId: HistoryChat.id[i], username: HistoryChat.username[i],
-            content: HistoryChat.content[i] })
-        }
-        console.log(instance.data.list)
+        console.log(1)
+        console.log(tempList.List)
+        instance.data.list = tempList.List;
+        // console.log(HistoryChat.history.length)
+        // for (let i=0;i<HistoryChat.history.length;i++){
+        //   // instance.data.list[i] = "userId:"+HistoryChat.id[i]+ "username:"+HistoryChat.username[i]+ "content:" +HistoryChat.content[i]
+        //   instance.data.list[i] = HistoryChat.List[i]
+        //   console.log(1)
+        //   console.log(instance.data.list[i])
+        // }
       })
 
       const  instance = getCurrentInstance()
@@ -67,35 +122,15 @@
       let UserToken = GLOBAL.token.value;
       let UserName = GLOBAL.userName.value;
 
-      //获取历史聊天记录
-      let HistoryChat = reactive({
-        history:[],
-        content:[],
-        username:[],
-        id:[]
-      });
-
-      //获取之前的聊天记录
-      ListChatDetail(ChatId).then(res=>{
-        HistoryChat.history = res
-        for (let i=0;i<HistoryChat.history.length;i++){
-          HistoryChat.content[i] = HistoryChat.history[i].content;
-          HistoryChat.username[i] = HistoryChat.history[i].userName;
-          HistoryChat.id[i] = HistoryChat.history[i].userId;
-        }
 
 
-        console.log(HistoryChat.history)
-        console.log(HistoryChat.username)
-        console.log(HistoryChat.content)
-        console.log(HistoryChat.id)
-      })
+
 
       return{
         UserName,
         UserToken,
         SellerId,
-        HistoryChat
+        // HistoryChat
       }
     },
     mounted() {
