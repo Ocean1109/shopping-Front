@@ -77,6 +77,7 @@
 <script>
     import GLOBAL from "../components/GlobalVariable"
     import {PublishProductInformation} from "../http/api";
+    import {ElMessage} from "element-plus";
 
     export default {
         name: "ProductPublish",
@@ -154,8 +155,9 @@
           formData.append("productRule",this.ProductInformation.productRule)
 
             PublishProductInformation(formData).then(res=>{
-              console.log(res)
-
+                if (res == true){
+                    ElMessage.success('支付订单成功');
+                }
             }
             )
         }

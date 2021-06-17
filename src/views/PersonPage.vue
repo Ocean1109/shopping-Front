@@ -43,8 +43,7 @@
                     <el-aside width="200px" style="opacity: 60%">
                         <el-menu class="el-menu-vertical-demo">
                             <el-menu-item class="LeftList" v-for="item in TableList" :key="item.name" :label="item.name">
-                                <router-link :to="item.path" style="text-decoration: none;color: black"
-                                >{{item.meta.title}}</router-link>
+                                <router-link :to="item.path" style="text-decoration: none;color: black">{{item.meta.title}}</router-link>
                             </el-menu-item>
                         </el-menu>
                     </el-aside>

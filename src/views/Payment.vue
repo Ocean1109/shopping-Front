@@ -2,7 +2,7 @@
     <div class="background">
         <div class="window">
             <p style="padding-top: 30px">扫描二维码进行支付</p>
-            <img src="../assets/image1.png" style="width: 150px;height: 150px;margin-top: 30px">
+            <img src="../assets/payment.jpg" style="width: 150px;height: 150px;margin-top: 30px">
             <p>
                 <el-button type="primary" @click="success()">支付成功</el-button>
             </p>
@@ -12,44 +12,49 @@
 </template>
 
 <script>
-    // import {reactive} from 'vue'
     import {useRoute, useRouter} from "vue-router";
     import {GenerateOrder} from "../http/api";
     import {ElMessage} from "element-plus";
+    import router from "../router";
 
     export default {
         name: "Payment",
         setup(){
             //创建路由，将成功的商品id通过路由传递到购物车中
             //获取数据
-            const router = useRouter();
+            const Router = useRouter();
 
             //获取购物车页面传来的商品id，作为保存
             const route = useRoute();
 
-            let OrderData = route.params.order;
-            console.log(OrderData.token)
+            //将字符串转为JSON格式
+            let OrderDataString = route.params.order;
+            let OrderData = JSON.parse(OrderDataString)
+            //Page = 1代表是从商品详细界面直接购买的
+            let Page = "0";
+            //从商品详细页面获取Page
+            Page = route.params.Page;
 
             //成功支付
             let success = ()=>{
                 GenerateOrder(OrderData).then(res=>{
-                    if (res.code === 0){
-                        ElMessage.success('创建成功');
-                        router.push({name:'ShoppingCar', params:{State:true}})
+                    if (res.code === 0  && Page == undefined ){
+                        ElMessage.success('支付订单成功');
+                        Router.push({name:'ShoppingCar', params:{State:true, Order:OrderDataString}})
+                    }else if(res.code === 0 && Page == 1){
+                        ElMessage.success('支付订单成功');
+                        router.push({path:'/'})
                     }else{
                         console.log(res.message)
                     }
                 })
 
             }
-
-
-
-
             return{
              success,
-             router,
-             OrderData
+             Router,
+             OrderData,
+             Page
             }
         }
     }

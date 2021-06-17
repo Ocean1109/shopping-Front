@@ -79,8 +79,7 @@
                                 <el-header style="height: 0px"></el-header>
                                 <el-main>
                                     <div class="Product">
-                                        <el-col :span="8" v-for="product in ProductItems.products" :key="product.id">
-
+                                        <el-col :span="8" v-for="product in ProductItems.products" :key="product.id" @click="DetailProduct(product.id)">
                                             <img :src="product.productImage" style="height: 150px;width: 150px">
                                             <p style="text-align: left;margin-left: 20px">{{product.productDesc.substring(0,30)}}</p>
                                             <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
@@ -94,25 +93,25 @@
                 <el-col :span="4" :offset="1">
                     <div class="RightBody">
                         <!--右部商品区-->
-                        <div v-for="item in testdata1" :key="item">
-                            <img src="../assets/image1.png">
-                            <p>{{item.text}}</p>
-                            <p>{{item.price}}</p>
+                        <div v-for="(item,index) in HomeProductItems.products" :key="index">
+                            <div v-if="index < 5">
+                                <img :src="item.productImage" style="width: 150px;height: 150px;" @click="DetailProduct(item.id)">
+                                <p style="text-align: left">{{item.productDesc.substring(0,20)}}</p>
+                                <p>{{item.productPrice}}</p>
+                            </div>
                         </div>
                     </div>
                 </el-col>
                 <el-col :span="1"></el-col>
             </el-row>
         </div>
-
-
     </div>
 </template>
 
 <script>
     import {reactive} from "vue";
     import {useRoute, useRouter} from 'vue-router';
-    import {ProductListOne,ProductListTwo,ProductListThree} from "../http/api";
+    import {ProductListOne, ProductListTwo, ProductListThree, allProduct, SearchProduct} from "../http/api";
     import GLOBAL from "../components/GlobalVariable"
 
     export default {
@@ -132,13 +131,29 @@
                 products: []
             });
 
+            //主页商品信息
+            const HomeProductItems = reactive({
+                products: []
+            })
+
             //创建路由，将关键字通过路由传递到其他页面
             const router = useRouter();
 
-            //绑定提交事件
-            let searchBtn =(value)=>{
-                router.push({name:'Commodity', params:{productclass:value}})
-                console.log(value)
+
+            //搜索信息
+            let SearchData = reactive({
+                product:[]
+            })
+
+            //搜索功能
+            let searchBtn =(name)=>{
+                let NameFormData = new FormData()
+                NameFormData.append("productName",name)
+                SearchProduct(NameFormData).then(res=>{
+                    SearchData.product = res
+                    let SearchDataString = JSON.stringify(SearchData)
+                    router.push({name:'SearchProductList', params:{search:SearchDataString}})
+                })
             };
 
 
@@ -151,6 +166,11 @@
                     ProductItems.products = res
                 }
             )
+
+            //获取主页商品数据
+            allProduct().then(res=>{
+                HomeProductItems.products = res
+            })
 
             //按照分类中的类别获取数据
             let ChooseType = (value)=>{
@@ -165,6 +185,11 @@
                         ProductItems.products = res
                     }
                 )
+            }
+
+            //点击照片跳转到具体页面
+            let DetailProduct = (id)=>{
+                router.push({name:'DetailProductInfo', params:{productid:id}})
             }
 
             //类别数据
@@ -208,74 +233,19 @@
                 ]
             );
 
-            //右部图片测试数据
-            let testdata1 = reactive(
-                [
-                    {
-                        img:'/public/image1.png',
-                        price:'600',
-                        text:'商品1'
-                    },
-                    {
-                        img:'/public/image2.png',
-                        price:'600',
-                        text:'商品2'
-                    },
-                    {
-                        img:'/public/image3.png',
-                        price:'600',
-                        text:'商品3'
-                    }
-                ]
-            )
-            //主体图片测试数据
-            let testdata2 = reactive([
-                {
-                    img:'/public/image1.png',
-                    price:'600',
-                    text:'商品1'
-                },
-                {
-                    img:'/public/image2.png',
-                    price:'600',
-                    text:'商品2'
-                },
-                {
-                    img:'/public/image3.png',
-                    price:'600',
-                    text:'商品3'
-                },
-                {
-                    img:'/public/image3.png',
-                    price:'600',
-                    text:'商品4'
-                },
-                {
-                    img:'/public/image3.png',
-                    price:'600',
-                    text:'商品5'
-                },
-                {
-                    img:'/public/image3.png',
-                    price:'600',
-                    text:'商品6'
-                }
-            ])
-
-
             return{
                 ProductItems,
                 Type,
                 ProductPlace,
                 classify,
-                testdata1,
-                testdata2,
                 ChooseAddress,
                 ChooseType,
                 searchData,
                 searchBtn,
                 UserToken,
-                UserName
+                UserName,
+                DetailProduct,
+                HomeProductItems
 
             }
         }
@@ -339,6 +309,7 @@
     /*右部商品展示*/
     .RightBody{
         margin-top: 30px;
+        margin-left: 30px;
     }
     .RightBody img{
         border-radius: 10px;

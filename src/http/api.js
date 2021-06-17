@@ -63,3 +63,54 @@ export const ModifyUserInfo = (data)=>{
 export const GetUserAddress = (token)=>{
     return $http.post('/ShowUserInfo',token,{'Content-Type':'multipart/form-data'})
 }
+
+//商品详细信息
+//获取商品详细信息
+export const GetDetailProductInfo = (id)=>{
+    return $http.get(`/product/${id}`)
+}
+
+//添加购物车
+export const ShoppingAdd = (data)=>{
+    return $http.post('/ShoppingCart',data)
+}
+
+//获取所有订单
+export const GetOrder = (id)=>{
+    return $http.post('/getOrders',id,{'Content-Type':'multipart/form-data'})
+}
+
+//确认收货，将待收货改成待评价
+export const ReceivedProduct = (id)=>{
+    return $http.post('/completeOrder',id,{'Content-Type':'multipart/form-data'})
+}
+
+//获取卖家所有订单
+export const GetSellerProduct = (id)=>{
+    return $http.post('/getOrder4Shopkeeper',id,{'Content-Type':'multipart/form-data'})
+}
+
+//已发货，修改订单状态
+export const SendProduct = (id)=>{
+    return $http.post('/sendingProduct',id,{'Content-Type':'multipart/form-data'})
+}
+
+//查看卖家发布的商品
+export const ProductPublishedList = (token)=>{
+    return $http.post('/listBusinessman',token,{'Content-Type':'multipart/form-data'})
+}
+
+//删除发布的商品
+export const DeleteProduct = (id)=>{
+    return $http.post('/delete',id,{'Content-Type':'multipart/form-data'})
+}
+
+//搜索商品，根据商品名字
+export const SearchProduct = (name)=>{
+    return $http.post('/search',name,{'Content-Type':'multipart/form-data'})
+}
+
+//获取聊天列表
+export const ListChat=(token)=>{
+    return $http.get('/chat',{headers:{'ownToken':token}})
+}

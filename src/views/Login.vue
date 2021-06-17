@@ -52,7 +52,6 @@
             ElMessage.success('登陆成功');
             GLOBAL.token.value = res.message;
             GLOBAL.userName.value = res.userName;
-            console.log(res.message)
             router.push({path:'/'})
 
           }else if(res.code ===1){

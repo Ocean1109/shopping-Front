@@ -20,10 +20,10 @@
       </el-menu-item>
       <el-menu-item index="4">
         <div v-if="UserToken==0">
-        <router-link to="/login" style="text-decoration: none">
-          点击这里，登录
-        </router-link>
-      </div>
+          <router-link to="/login" style="text-decoration: none">
+            点击这里，登录
+          </router-link>
+        </div>
         <div v-if="UserToken!=0">
           <span>你好，{{UserName}}</span>
         </div>
@@ -132,11 +132,15 @@
         <el-main>
           <!--商品列表展示区-->
           <div class="ListBody">
-            <el-col :span="4" v-for="product in ProductItems.products" :key="product.id">
-              <img :src="product.productImage" style="height: 150px;width: 150px">
-              <p style="text-align: left;margin-left: 20px">{{product.productDesc.substring(0,30)}}</p>
-              <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
-            </el-col>
+            <el-row :gutter="24">
+              <el-col :span="8" v-for="(product,index) in ProductItems.products" :key="product.id">
+                <div v-if="index<20">
+                  <img :src="product.productImage" style="height: 150px;width: 150px" @click="DetailProduct(product.id)">
+                  <p style="text-align: left;margin-left: 20px">{{product.productDesc.substring(0,30)}}</p>
+                  <p style="margin-bottom: 20px"><span>{{product.productPrice}}</span></p>
+                </div>
+              </el-col>
+            </el-row>
           </div>
         </el-main>
       </el-container>
@@ -147,7 +151,7 @@
 
 <script>
   import {reactive} from 'vue'
-  import {allProduct} from "../http/api"
+  import {allProduct, SearchProduct} from "../http/api"
   import {useRouter} from 'vue-router';
   import GLOBAL from "../components/GlobalVariable"
   export default{
@@ -211,23 +215,38 @@
 
       //创建路由，将关键字通过路由传递到其他页面
       const router = useRouter();
-      //绑定提交事件
-      let searchBtn =(value)=>{
-        router.push({name:'Commodity', params:{productclass:value}})
-        console.log(value)
+
+      //搜索信息
+      let SearchData = reactive({
+        product:[]
+      })
+
+      //搜索功能
+      let searchBtn =(name)=>{
+        let NameFormData = new FormData()
+        NameFormData.append("productName",name)
+        SearchProduct(NameFormData).then(res=>{
+          SearchData.product = res
+          let SearchDataString = JSON.stringify(SearchData)
+          router.push({name:'SearchProductList', params:{search:SearchDataString}})
+        })
       };
 
       //将关键词发送到后端
       let keyword =(value)=>{
         router.push({name:'Commodity', params:{productclass:value}})
-        console.log(value)
       }
 
+      //点击照片跳转到具体页面
+      let DetailProduct = (id)=>{
+        router.push({name:'DetailProductInfo', params:{productid:id}})
+      }
       return{
         searchData,
         searchBtn,
         ProductItems,
         keyword,
+        DetailProduct,
         ProductCategory1,
         ProductCategory2,
         ProductCategory3,

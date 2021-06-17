@@ -7,6 +7,9 @@ import ShoppingCar from "../views/ShoppingCar"
 import Communication from "../views/Communication";
 import PersonPage from "../views/PersonPage";
 import Payment from "../views/Payment";
+import DetailProductInfo from "../views/DetailProductInfo"
+import SearchProductList from "../views/SearchProductList";
+
 const routes = [
   {
     //主页
@@ -84,13 +87,13 @@ const routes = [
         component: ()=> import('../views/Address')
       },{
         //聊天室
-        path: '/ChatRoom',
-        name: 'ChatRoom',
+        path: '/ChatList',
+        name: 'ChatList',
         meta:{
           isShow:true,
           title:'聊天室'
         },
-        component: ()=> import('../views/ChatRoom')
+        component: ()=> import('../views/ChatList')
       },{
         //订单历史
         path: '/OrderHistory',
@@ -99,45 +102,6 @@ const routes = [
           isShow:true,
           title:'查看我的订单'
         },
-        children:[
-          {
-            //所有订单
-            path: '/AllOrder',
-            name:'AllOrder',
-            meta:{
-              isShow:true,
-              title:'所有订单'
-            },
-            component:()=>import('../views/OrderStyle/AllOrder')
-          },{
-            //待发货
-            path: '/BeforeSign',
-            name:'BeforeSign',
-            meta:{
-              isShow:true,
-              title:'待发货'
-            },
-            component:()=>import('../views/OrderStyle/BeforeSign')
-          },{
-            //待收货
-            path: '/AfterSign',
-            name:'AfterSign',
-            meta:{
-              isShow:true,
-              title:'待收货'
-            },
-            component:()=>import('../views/OrderStyle/AfterSign')
-          },{
-            //待评价
-            path: '/AfterEvaluate',
-            name:'AfterEvaluate',
-            meta:{
-              isShow:true,
-              title:'待评价'
-            },
-            component:()=>import('../views/OrderStyle/AfterEvaluate')
-          }
-        ],
         component: ()=> import('../views/OrderHistory')
       },{
         //商品发布
@@ -148,15 +112,44 @@ const routes = [
           title:'发布商品'
         },
         component: ()=> import('../views/ProductPublish')
+      },{
+        //查看卖家发布的商品
+        path: '/PublishProductList',
+        name: 'PublishProductList',
+        meta:{
+          isShow:true,
+          title:'已发布商品'
+        },
+        component: ()=> import('../views/PublishProductList')
+      },{
+        //查看卖家的订单
+        path: '/OrderList',
+        name: 'OrderList',
+        meta:{
+          isShow:true,
+          title:'卖家订单'
+        },
+        component: ()=> import('../views/OrderList')
       }
     ],
     component: PersonPage
   },{
-    //注册
+    //支付
     path: '/payment',
     name: 'Payment',
     component:Payment
+  },{
+    //具体商品信息
+    path:'/DetailProductInfo',
+    name:'DetailProductInfo',
+    component:DetailProductInfo
+  },{
+    //搜索结果返回的商品列表
+    path:'/SearchProductList',
+    name:'SearchProductList',
+    component:SearchProductList
   }
+
 ]
 
 const router = createRouter({

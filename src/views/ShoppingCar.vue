@@ -84,7 +84,7 @@
                         <img id="choose" src="../assets/choose.png" style="width: 20px;height: 20px" @click="Choose(forId(index),index)">
                     </el-col>
                     <el-col :span="3" style="height: 150px">
-                        <img :src="item.image" style="width: 130px;height: 130px;margin-top: 10px">
+                        <img :src="item.image" style="width: 130px;height: 130px;margin-top: 10px" @click="ProductDesc(item.id)">
                     </el-col>
                     <el-col :span="5" style="height: 150px;text-align: left;line-height: 40px">
                         <span>{{item.name}}</span>
@@ -93,7 +93,7 @@
                         <span>{{item.price}}</span>
                     </el-col>
                     <el-col :span="4" style="height: 150px">
-                        <el-input-number size="mini" v-model="item.productNumber" :min="1" onchange="Change(current,old)"></el-input-number>
+                        <el-input-number size="mini" v-model="item.productNumber" :min="1"></el-input-number>
                     </el-col>
                     <el-col :span="4" style="height: 150px">
                         <span>{{item.productNumber*item.price}}</span>
@@ -135,7 +135,7 @@
     import {reactive,ref} from 'vue'
     import {useRoute, useRouter} from "vue-router";
     import GLOBAL from "../components/GlobalVariable"
-    import {ShoppingUserToken,ShoppingDelete} from "../http/api";
+    import {ShoppingUserToken, ShoppingDelete, SearchProduct} from "../http/api";
 
     export default {
         name: "ShoppingCar",
@@ -156,6 +156,7 @@
                     num:''
                 }
             )
+
             //用户token和用户名
             let usertoken = GLOBAL.token.value
             let UserName = GLOBAL.userName.value;
@@ -169,13 +170,17 @@
             //将用户token传递到后端，并且获取该用户购物车的信息
             ShoppingUserToken(formData).then(res=>{
                 ShoppingCartProduct.Product = res;
-                console.log(ShoppingCartProduct.Product)
                 //判断购物车是否为空
                 if(ShoppingCartProduct.Product.length == 0){
                     Message.value = "购物车为空"
                 }
 
             })
+
+            //点击图片查看详细信息
+            let ProductDesc = (id)=>{
+                router.push({name:'DetailProductInfo', params:{productid:id}})
+            }
 
             //搜索关键词
             let searchData = reactive({
@@ -185,13 +190,23 @@
             //创建路由，将关键字通过路由传递到其他页面
             const router = useRouter();
 
-            //声明支付状态，true代表成功支付
+            //声明支付状态，1代表成功支付
             let PaymentState = false;
 
-            //绑定提交事件
-            let searchBtn =(value)=>{
-                router.push({name:'Commodity', params:{productclass:value}})
-                console.log(value)
+            //  //搜索信息
+            let SearchData = reactive({
+                product:[]
+            })
+
+            //搜索功能
+            let searchBtn =(name)=>{
+                let NameFormData = new FormData()
+                NameFormData.append("productName",name)
+                SearchProduct(NameFormData).then(res=>{
+                    SearchData.product = res
+                    let SearchDataString = JSON.stringify(SearchData)
+                    router.push({name:'SearchProductList', params:{search:SearchDataString}})
+                })
             };
 
             //默认选中商品值
@@ -199,21 +214,13 @@
             //默认支付的价格
             let Amount = ref(0);
 
-            //修改计数器中的值————修改商品数量
-
-
             //删除功能
             let Delete =(index)=>{
-                console.log(ShoppingCartProduct.Product[index].id);
                 ModifyData.num = ShoppingCartProduct.Product[index].productNumber;
-                console.log(ModifyData.num)
                 ModifyData.operate=1;
                 ModifyData.productId = ShoppingCartProduct.Product[index].id;
-                console.log(ModifyData)
                 ShoppingDelete(ModifyData).then(res=>{
                     ShoppingCartProduct.Product = res;
-                    console.log(res)
-                    console.log(ShoppingCartProduct.Product)
                 })
             }
 
@@ -221,8 +228,6 @@
             let Choose =(divId,index)=> {
                 //获取选中商品的id
                 let productid = document.getElementById(divId)
-                console.log(productid.id)
-                console.log(productid)
                 //选中商品
                 if (ShoppingCartProduct.Product[index].type==0){
                     ShoppingCartProduct.Product[index].type=1;
@@ -261,8 +266,9 @@
             //结算提交的订单数据
             let OrderData = reactive({
                 token:'',
-                productIds:[]
+                productIds:[],
             })
+
 
             //结算  统计选中的商品id
             let pay =()=>{
@@ -273,36 +279,33 @@
                         OrderData.productIds.push(ShoppingCartProduct.Product[i].id)
                     }
                 }
-                //将订单信息提交到支付界面
-                console.log(OrderData)
-                router.push({name:'Payment', params:{order:OrderData}})
 
+                let OrderDataString = JSON.stringify(OrderData)
+                router.push({name:'Payment', params:{order:OrderDataString}})
             }
 
             //获取支付页面传来的成功状态，作为保存
             const route = useRoute();
             PaymentState = route.params.State;
 
-            //将成功支付的商品删除
-            if (PaymentState == true){
-                for (let i=0;i<OrderData.productIds.length;i++){
-                    ModifyData.productId = OrderData.productIds[i];
-                    ModifyData.num = 1;
-                    ModifyData.operate=1;
-                    ShoppingDelete(ModifyData).then(res=>{
-                        ShoppingCartProduct.Product = res;
-                    })
+            //重新接收OrderData数据，因为页面刷新会清空数据
+            let OrderDataString = route.params.Order;
+            if(OrderDataString!=undefined){
+                let orderData = JSON.parse(OrderDataString)
+                //将成功支付的商品删除
+                if (PaymentState == "true"){
+                    for (let i=0;i<orderData.productIds.length;i++){
+                        ModifyData.productId = orderData.productIds[i];
+                        ModifyData.num = 1;
+                        ModifyData.operate=1;
+                        ShoppingDelete(ModifyData).then(res=>{
+                            ShoppingCartProduct.Product = res;
+                        })
+                    }
                 }
+                OrderDataString = undefined
             }
 
-            //选择器里面的值改变触发的函数
-            let Change=(current,old)=>{
-                if (current - old >0){
-                    console.log("增加了商品")
-                }else if(current - old < 0){
-                    console.log("减少了商品")
-                }
-            }
             return{
                 Choose,
                 PurchaseNum,
@@ -318,9 +321,9 @@
                 ShoppingCartProduct,
                 Message,
                 ModifyData,
-                Change,
                 UserName,
-                OrderData
+                OrderData,
+                ProductDesc
             }
         },
         methods:{

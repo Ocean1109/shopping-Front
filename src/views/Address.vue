@@ -70,11 +70,9 @@
             let formData=new FormData()
             formData.append("token",UserToken)
             GetUserAddress(formData).then(res=>{
-                console.log(res)
                 AddressTable.Name = res.userName;
                 AddressTable.Address = res.address;
                 AddressTable.phone = res.tel;
-                console.log(AddressTable)
                 State = 1;
             })
 
