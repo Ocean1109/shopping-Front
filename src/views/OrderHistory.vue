@@ -108,7 +108,7 @@
                         OrderInfo.Orderlist = res.extendShoppingOrders;
                         for (let i = 0; i < OrderInfo.Orderlist.length; i++) {
                             if (OrderInfo.Orderlist[i].tradeStatus == 1) {
-                                OrderInfo.State[i] = "代发货"
+                                OrderInfo.State[i] = "待发货"
                             } else if (OrderInfo.Orderlist[i].tradeStatus == 3) {
                                 OrderInfo.State[i] = "待评价"
                             } else if (OrderInfo.Orderlist[i].tradeStatus == 4) {
