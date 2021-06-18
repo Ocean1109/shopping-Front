@@ -3,14 +3,24 @@
         <!--导航栏-->
         <el-menu  class="el-menu-demo" mode="horizontal" >
             <el-menu-item index="1">
-                <router-link to="/PersonPage" style="text-decoration: none">
-                    个人中心
-                </router-link>
+                <div v-if="UserToken !=0">
+                    <router-link to="/PersonPage" style="text-decoration: none">
+                        个人中心
+                    </router-link>
+                </div>
+                <div v-if="UserToken ==0">
+                    <span @click="Warning">个人中心</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="2">
-                <router-link to="/ShoppingCar" style="text-decoration: none">
-                    我的购物车
-                </router-link>
+                <div v-if="UserToken !=0">
+                    <router-link to="/ShoppingCar" style="text-decoration: none">
+                        我的购物车
+                    </router-link>
+                </div>
+                <div v-if="UserToken ==0">
+                    <span @click="Warning">我的购物车</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="3">
                 <router-link to="/Communication" style="text-decoration: none">
@@ -39,7 +49,7 @@
                 <div style="text-align: center;margin-top: 36px">
                     <!--图标，返回主页-->
                     <router-link to="/">
-                        <img src="../assets/image1.png" id="picture" style="height: 60px;width: 60px">
+                        <img src="../assets/logo.png" id="picture" style="height: 60px;width: 60px">
                     </router-link>
                 </div>
             </el-col>
@@ -113,6 +123,7 @@
     import {useRoute, useRouter} from 'vue-router';
     import {ProductListOne, ProductListTwo, ProductListThree, allProduct, SearchProduct} from "../http/api";
     import GLOBAL from "../components/GlobalVariable"
+    import {ElMessage} from "element-plus";
 
     export default {
         name: "CommodityList",
@@ -196,19 +207,19 @@
             let Type = reactive(
                 [
                     {
-                        value:'乐扣乐扣(LOCK&LOCK)'
+                        value:'DIOR'
                     },
                     {
-                        value:'类别2'
+                        value:'BOY'
                     },
                     {
-                        value:'类别3'
+                        value:'奥利奥'
                     },
                     {
-                        value:'类别4'
+                        value:'欧普'
                     },
                     {
-                        value:'类别5'
+                        value:'斯伯丁'
                     }
                 ]
             );
@@ -225,13 +236,18 @@
                         value:'上海'
                     },
                     {
-                        value:'重庆'
+                        value:'广东'
                     },
                     {
-                        value:'深圳'
+                        value:'江苏'
                     }
                 ]
             );
+
+            //警告
+            let Warning = ()=>{
+                ElMessage.error('请先进行登录');
+            }
 
             return{
                 ProductItems,
@@ -245,7 +261,8 @@
                 UserToken,
                 UserName,
                 DetailProduct,
-                HomeProductItems
+                HomeProductItems,
+                Warning
 
             }
         }

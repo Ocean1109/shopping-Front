@@ -3,14 +3,24 @@
         <!--导航栏-->
         <el-menu  class="el-menu-demo" mode="horizontal" >
             <el-menu-item index="1">
-                <router-link to="/PersonPage" style="text-decoration: none">
-                    个人中心
-                </router-link>
+                <div v-if="UserToken !=0">
+                    <router-link to="/PersonPage" style="text-decoration: none">
+                        个人中心
+                    </router-link>
+                </div>
+                <div v-if="UserToken ==0">
+                    <span @click="Warning">个人中心</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="2">
-                <router-link to="/ShoppingCar" style="text-decoration: none">
-                    我的购物车
-                </router-link>
+                <div v-if="UserToken !=0">
+                    <router-link to="/ShoppingCar" style="text-decoration: none">
+                        我的购物车
+                    </router-link>
+                </div>
+                <div v-if="UserToken ==0">
+                    <span @click="Warning">我的购物车</span>
+                </div>
             </el-menu-item>
             <el-menu-item index="3">
                 <router-link to="/Communication" style="text-decoration: none">
@@ -39,7 +49,7 @@
                 <div style="text-align: center;margin-top: 36px">
                     <!--图标，返回主页-->
                     <router-link to="/">
-                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                        <img src="../assets/logo.png" style="height: 60px;width: 60px">
                     </router-link>
                 </div>
             </el-col>
@@ -58,7 +68,7 @@
 
         <div>
             <el-row>
-                <el-col :span="20">
+                <el-col :span="20" :offset="2">
                     <!--商品详细信息-->
                     <div style="width: 1300px;margin:30px auto">
                         <el-row>
@@ -67,6 +77,7 @@
                                 <!--图片-->
                                 <el-col :span="11" :offset="2" style="margin-top: 30px">
                                     <img :src="DetailProduct.product.productImage" style="width: 300px;height: 300px">
+
                                     <el-button type="text"
                                                @click="ChatSeller(DetailProduct.product.publishUserId,DetailProduct.product.id)">联系卖家</el-button>
                                 </el-col>
@@ -105,21 +116,9 @@
                                     </el-row>
                                 </div>
                                 <!--详细介绍图片-->
-                                <img :src="DetailProduct.product.moreImages" style="margin-top: 50px;margin-bottom: 50px;width: 500px;height: 500px">
+                                <img :src="DetailProduct.product.moreImages" style="margin-top: 50px;margin-bottom: 50px;width: 500px">
                             </div>
                         </el-row>
-                    </div>
-                </el-col>
-                <el-col :span="4">
-                    <div class="RightBody">
-                        <!--右部商品区-->
-                        <div v-for="(item,index) in HomeProductItems.products" :key="index">
-                            <div v-if="index < 5">
-                                <img :src="item.productImage" style="width: 150px;height: 150px;" @click="DetailProduct(item.id)">
-                                <p style="text-align: left">{{item.productDesc.substring(0,20)}}</p>
-                                <p>{{item.productPrice}}</p>
-                            </div>
-                        </div>
                     </div>
                 </el-col>
             </el-row>
@@ -134,7 +133,7 @@
     import {useRoute, useRouter} from "vue-router";
     import {reactive,ref} from "vue";
     import GLOBAL from "../components/GlobalVariable";
-    import {allProduct, GetDetailProductInfo, SearchProduct, ShoppingAdd, CreateChat} from "../http/api";
+    import {GetDetailProductInfo, SearchProduct, ShoppingAdd, CreateChat} from "../http/api";
     import {ElMessage} from "element-plus";
 
     export default {
@@ -181,7 +180,6 @@
             //获取商品各种数据
             GetDetailProductInfo(ProductId).then(res=>{
                 DetailProduct.product = res;
-                console.log(res)
             })
 
             //商品选择的数量，购买或者加入购物车
@@ -210,17 +208,7 @@
                     }
                 })
             }
-
-            //主页商品信息
-            const HomeProductItems = reactive({
-                products: []
-            })
-
-            //获取主页商品数据
-            allProduct().then(res=>{
-                HomeProductItems.products = res
-            })
-
+            
             //结算需要返回给后端的数据
             let PayementData = reactive({
                 token:'',
@@ -237,6 +225,7 @@
 
             //联系卖家
             let ChatSeller = (userid,productid)=>{
+                if (UserToken != 0){
                 let formdata = new FormData()
                 formdata.append("businessId",userid)
                 formdata.append("token",UserToken)
@@ -252,10 +241,17 @@
                     }
 
                 })
-
+                }else{
+                    ElMessage.error('请先进行登录')
+                }
 
             }
 
+
+            //警告
+            let Warning = ()=>{
+                ElMessage.error('请先进行登录');
+            }
             return{
                 searchBtn,
                 searchData,
@@ -268,8 +264,8 @@
                 ShoppingCart,
                 PayementData,
                 Payment,
-                HomeProductItems,
-                ChatSeller
+                ChatSeller,
+                Warning
 
             }
         }

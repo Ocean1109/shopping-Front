@@ -35,7 +35,7 @@
                 <div style="text-align: center;margin-top: 36px">
                     <!--图标，返回主页-->
                     <router-link to="/">
-                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                        <img src="../assets/logo.png" style="height: 60px;width: 60px">
                     </router-link>
                 </div>
             </el-col>

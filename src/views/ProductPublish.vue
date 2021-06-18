@@ -78,6 +78,7 @@
     import GLOBAL from "../components/GlobalVariable"
     import {PublishProductInformation} from "../http/api";
     import {ElMessage} from "element-plus";
+    import router from "../router";
 
     export default {
         name: "ProductPublish",
@@ -156,7 +157,8 @@
 
             PublishProductInformation(formData).then(res=>{
                 if (res == true){
-                    ElMessage.success('支付订单成功');
+                    ElMessage.success('提交成功');
+                    router.push({path:'/'})
                 }
             }
             )

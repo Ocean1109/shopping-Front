@@ -36,7 +36,7 @@
                 <el-header style="background-color: white">
                     <!--图标，返回主页-->
                     <router-link to="/">
-                        <img src="../assets/image1.png" style="height: 60px;width: 60px">
+                        <img src="../assets/logo.png" style="height: 60px;width: 60px">
                     </router-link>
                 </el-header>
                 <el-container>
