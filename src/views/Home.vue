@@ -169,17 +169,23 @@
   export default{
 
     name: 'Home',
-    // mounted() {
-    //   keepLogin().then(res=>{
-    //     console.log(res)
-    //     GLOBAL.token.value = res.message;
-    //     GLOBAL.userName.value = res.userName;
-    //     //用户token和用户名
-    //     // let UserToken = GLOBAL.token.value;
-    //     // let UserName = GLOBAL.userName.value;
-    //
-    //   })
-    // },
+    beforeCreate() {
+      keepLogin().then(res=>{
+        console.log(res)
+        GLOBAL.token.value = res.message;
+        GLOBAL.userName.value = res.userName;
+        //用户token和用户名
+        this.UserToken = GLOBAL.token.value;
+        this.UserName = GLOBAL.userName.value;
+
+      })
+    },
+    data(){
+      return{
+        UserToken:0,
+        UserName:0
+      }
+    },
     setup(){
       //搜索关键词
       let searchData = reactive({
@@ -187,24 +193,19 @@
       });
 
       console.log(GLOBAL.token.value)
-      keepLogin().then(res=>{
-        console.log(res)
-        GLOBAL.token.value = res.message;
-        GLOBAL.userName.value = res.userName;
-        router.push('/')
-
-
-        console.log("跳转结束")
-        //用户token和用户名
-        // let UserToken = GLOBAL.token.value;
-        // let UserName = GLOBAL.userName.value;
-
-      })
-
-      //用户token和用户名
-      let UserToken = GLOBAL.token.value;
-      let UserName = GLOBAL.userName.value;
-
+      // keepLogin().then(res=>{
+      //   console.log(res)
+      //   GLOBAL.token.value = res.message;
+      //   GLOBAL.userName.value = res.userName;
+      //   router.push('/')
+      //
+      //
+      //   console.log("跳转结束")
+      //   //用户token和用户名
+      //   this.UserToken = GLOBAL.token.value;
+      //   this.UserName = GLOBAL.userName.value;
+      //
+      // })
 
       //分类数组
       let ProductCategory1 = reactive(
@@ -296,8 +297,6 @@
         ProductCategory3,
         ProductCategory4,
         ProductCategory5,
-        UserToken,
-        UserName,
         Warning
       }
     }
