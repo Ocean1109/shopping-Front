@@ -9,6 +9,12 @@ export const login = (data)=>{
 export const register = (data)=>{
     return $http.post('/register',data)
 }
+
+//主页持久化登录，每次刷新不会清除用户数据
+export const keepLogin = ()=>{
+    return $http.get('/isLogin')
+}
+
 //主页获取数据
 export const allProduct = ()=>{
     return $http.get('/product/全部/全部/全部')
@@ -38,7 +44,7 @@ export const ShoppingUserToken = (token)=>{
 }
 
 //删除购物车数据
-export const ShoppingDelete = (data)=>{
+export const ShoppingChange = (data)=>{
     return $http.post('/ShoppingCart',data)
 }
 

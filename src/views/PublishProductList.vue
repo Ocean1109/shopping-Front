@@ -19,7 +19,7 @@
         <div v-for="product in PubishedProduct.Products" :key="product" style="margin-top: 20px;line-height: 200px">
             <el-row>
                 <el-col :span="8" >
-                    <img :src="product.productImage" style="width: 200px;height: 200px">
+                    <img :src="product.productImage" style="width: 200px;height: 200px " @click="DetailProduct(product.id)">
                 </el-col>
                 <el-col :span="8">
                     <span>{{product.productDesc.substring(0,20)}}</span>
@@ -57,6 +57,7 @@
             formData.append("token",UserToken)
             ProductPublishedList(formData).then(res=>{
                 PubishedProduct.Products = res
+                console.log(PubishedProduct.Products)
             })
 
             //创建路由，将关键字通过路由传递到其他页面
@@ -77,10 +78,16 @@
 
                 })
             }
+
+            //点击照片跳转到具体页面
+            let DetailProduct = (id)=>{
+                router.push({name:'DetailProductInfo', params:{productid:id}})
+            }
             return{
                 UserToken,
                 PubishedProduct,
-                DeletePublishedProduct
+                DeletePublishedProduct,
+                DetailProduct
             }
         }
     }

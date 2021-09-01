@@ -73,6 +73,7 @@
         name: "OrderList",
         setup(){
 
+
             //获取用户名
             let UserToken = GLOBAL.token.value
 
@@ -98,10 +99,22 @@
                     }
 
                 }
+                //对买家数据进行隐藏
+                for (let i=0;i<OrderListData.OrderList.length;i++){
+                    //保留姓氏
+                    let TempName = OrderListData.OrderList[i].name.substr(0,1);
+                    OrderListData.OrderList[i].name = TempName + "**"
+                    //保留前三位和后两位
+                    let TempTelFront = OrderListData.OrderList[i].tel.substr(0,3);
+                    let TempTelBack = OrderListData.OrderList[i].tel.substr(9,2);
+                    OrderListData.OrderList[i].tel = TempTelFront + "******" + TempTelBack
+                }
             })
 
-            //发货功能
 
+
+
+            //发货功能
             let SentProduct = (status,id)=>{
                 let SendFormData=new FormData()
                 SendFormData.append("id",id);

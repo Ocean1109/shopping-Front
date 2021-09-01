@@ -1,31 +1,42 @@
 <template>
   <div class="ListBody">
-  <div class="chat-box">
-    <div class="msg-box" ref="msg-box">
-      <div
-              v-for="(i,index) in tempList.List"
-              :key="index"
-              class="msg"
-              :style="i.userId == userId?'flex-direction:row-reverse':''">
-        <div class="user-msg">
-          <span :style="i.userId == userId?' float: right;':''" :class="i.userId == userId?'right':'left'">{{i.content}}</span>
+    <!--返回主页-->
+    <el-row :gutter="24">
+      <el-col :span="3">
+        <div style="margin-top: 36px">
+          <router-link to="/">
+            <img src="../assets/logo.png" style="height: 60px;width: 60px;border-radius: 0px">
+          </router-link>
+          </div>
+      </el-col>
+      <el-col :span="21"></el-col>
+    </el-row>
+    <div class="chat-box">
+      <div class="msg-box" ref="msg-box">
+        <div
+                v-for="(i,index) in tempList.List"
+                :key="index"
+                class="msg"
+                :style="i.userId == userId?'flex-direction:row-reverse':''">
+          <div class="user-msg">
+            <span :style="i.userId == userId?' float: right;':''" :class="i.userId == userId?'right':'left'">{{i.content}}</span>
+          </div>
+        </div>
+        <div
+                v-for="(i,index) in list"
+                :key="index"
+                class="msg"
+                :style="i.userId == userId?'flex-direction:row-reverse':''">
+          <div class="user-msg">
+            <span :style="i.userId == userId?' float: right;':''" :class="i.userId == userId?'right':'left'">{{i.content}}</span>
+          </div>
         </div>
       </div>
-      <div
-              v-for="(i,index) in list"
-              :key="index"
-              class="msg"
-              :style="i.userId == userId?'flex-direction:row-reverse':''">
-        <div class="user-msg">
-          <span :style="i.userId == userId?' float: right;':''" :class="i.userId == userId?'right':'left'">{{i.content}}</span>
-        </div>
+      <div class="input-box">
+        <input type="text" ref="sendMsg" v-model="contentText" @keyup.enter="sendText()" />
+        <div class="btn" :class="{['btn-active']:contentText}" @click="sendText()">发送</div>
       </div>
     </div>
-    <div class="input-box">
-      <input type="text" ref="sendMsg" v-model="contentText" @keyup.enter="sendText()" />
-      <div class="btn" :class="{['btn-active']:contentText}" @click="sendText()">发送</div>
-    </div>
-  </div>
   </div>
 </template>
 
@@ -36,6 +47,7 @@
   import {onMounted, getCurrentInstance} from  "vue"
   import {ListChatDetail} from "../http/api"
   import {reactive} from "vue"
+  import {ElMessage} from "element-plus";
   export default {
     data() {
       return {
@@ -100,7 +112,8 @@
     methods: {
       //将消息显示在网页上
       setMessage(message) {
-        alert(message)
+        // alert(message)
+        ElMessage.warning(message)
       },
       // 发送聊天信息
       sendText() {
@@ -135,15 +148,18 @@
           _this.ws = ws;
           ws.onopen = function() {
             console.log("服务器连接成功: " + url);
-            _this.setMessage("服务器连接成功: " + url);
+            // _this.setMessage("服务器连接成功: " + url);
+            _this.setMessage("服务器连接成功");
           };
           ws.onclose = function() {
             console.log("服务器连接关闭: " + url);
-            _this.setMessage("服务器连接关闭: " + url);
+            // _this.setMessage("服务器连接关闭: " + url);
+            _this.setMessage("服务器连接关闭");
           };
           ws.onerror = function() {
             console.log("服务器连接出错: " + url);
-            _this.setMessage("服务器连接出错: " + url);
+            // _this.setMessage("服务器连接出错: " + url);
+            _this.setMessage("服务器连接出错");
           };
           ws.onmessage = function(e) {
             //接收服务器返回的数据
@@ -185,12 +201,14 @@
     overflow:scroll
   }
   .chat-box {
-    margin: 100px auto;
+    margin: 50px auto;
     background: #fafafa;
     position: absolute;
-    height: 100%;
-    width: 100%;
-    max-width: 700px;
+    height: 550px;
+    width: 700px;
+    left: 50%;
+    top: 50%;
+    margin: -250px 0 0 -350px;
     header {
       position: fixed;
       width: 100%;
@@ -309,6 +327,7 @@
         border-radius: 0.2rem;
         margin-left: 0.5rem;
         transition: 0.5s;
+        line-height: 2.3rem;
       }
       .btn-active {
         background: #409eff;

@@ -85,7 +85,7 @@
                                 <el-col :span="11" style="margin-top: 30px;margin-left: 50px">
                                     <h1 style="text-align: center">{{DetailProduct.product.productDesc}}</h1>
                                     <p style="margin-top: 30px">价格： ￥  {{DetailProduct.product.productPrice}}</p>
-                                    <el-input-number v-model="ProductNum" size="middle" :min="1" :max="20" style="width: 300px;margin-top: 30px"></el-input-number>
+                                    <el-input-number v-model="ProductNum" size="middle" :min="1" :max="10000" style="width: 300px;margin-top: 30px"></el-input-number>
                                     <p style="margin-top: 30px">剩余商品数量:  {{DetailProduct.product.numbers}}</p>
                                     <p style="margin-top: 30px">
                                         <span>发货地：  {{DetailProduct.product.productAddress}}</span>
@@ -99,9 +99,9 @@
 
                             <!--商品详细信息展示-->
                             <div class="productbody" style="margin-top: 0px">
-                                <p style="margin-top: 50px">商品参数</p>
+                                <h3 style="margin-top: 50px;margin-bottom: 30px">商品参数</h3>
                                 <!--商品规格-->
-                                <div>
+                                <div v-if="DetailProduct.product.rule != null || DetailProduct.product.productRule !=null">
                                     <el-row style="margin-top: 30px">
                                         <el-col :span="12" style="text-align: center">
                                             <div v-for="rule in DetailProduct.product.rule" :key="rule" style="margin-top: 10px">
@@ -115,8 +115,14 @@
                                         </el-col>
                                     </el-row>
                                 </div>
+                                <div v-if="DetailProduct.product.rule == null && DetailProduct.product.productRule ==null">
+                                    <p>无具体商品参数</p>
+                                </div>
                                 <!--详细介绍图片-->
-                                <img :src="DetailProduct.product.moreImages" style="margin-top: 50px;margin-bottom: 50px;width: 500px">
+                                <div v-for="picture in DetailProduct.product.moreImages" :key="picture">
+                                    <img :src="picture" style="margin-top: 50px;margin-bottom: 50px;width: 500px">
+                                </div>
+
                             </div>
                         </el-row>
                     </div>
@@ -180,6 +186,7 @@
             //获取商品各种数据
             GetDetailProductInfo(ProductId).then(res=>{
                 DetailProduct.product = res;
+                console.log(DetailProduct.product)
             })
 
             //商品选择的数量，购买或者加入购物车
@@ -200,47 +207,62 @@
                 AddProduct.productId = ProductId;
                 AddProduct.token = UserToken;
                 AddProduct.num = ProductNum;
-                ShoppingAdd(AddProduct).then(res=>{
-                    if (res.success == true){
-                        ElMessage.success('添加购物车成功');
-                    }else{
-                        alert(res.message)
-                    }
-                })
+                if (ProductNum.value > DetailProduct.product.numbers){
+                    ElMessage.error('库存不足');
+                    ProductNum.value = DetailProduct.product.numbers
+                }
+                else {
+                    ShoppingAdd(AddProduct).then(res => {
+                        if (res.success == true) {
+                            ElMessage.success('添加购物车成功');
+                        } else {
+                            alert(res.message)
+                        }
+                    })
+                }
             }
-            
+
             //结算需要返回给后端的数据
             let PayementData = reactive({
                 token:'',
-                productIds:[]
+                productIds:[],
+                num:[]
             })
 
             //立即支付
             let Payment = ()=>{
-                PayementData.token = UserToken;
-                PayementData.productIds[0] = ProductId;
-                let OrderDataString = JSON.stringify(PayementData)
-                router.push({name:'Payment', params:{order:OrderDataString,Page:1}})
+                if (ProductNum.value > DetailProduct.product.numbers){
+                    ElMessage.error('库存不足');
+                    ProductNum.value = DetailProduct.product.numbers
+                }
+                else {
+
+                    PayementData.token = UserToken;
+                    PayementData.productIds[0] = ProductId;
+                    PayementData.num[0] = ProductNum.value;
+                    let OrderDataString = JSON.stringify(PayementData)
+                    router.push({name: 'Payment', params: {order: OrderDataString, Page: 1}})
+                }
             }
 
             //联系卖家
             let ChatSeller = (userid,productid)=>{
                 if (UserToken != 0){
-                let formdata = new FormData()
-                formdata.append("businessId",userid)
-                formdata.append("token",UserToken)
-                formdata.append("productId",productid)
-                let chatid = ""
-                CreateChat(formdata).then(res=>{
-                    if (res === -1){
-                        ElMessage.error('卖买家不能是一个人');
-                    }
-                    else {
-                        chatid = res
-                        router.push({name:'ChatRoom', params:{CellerUserId:userid,ChatId:chatid}})
-                    }
+                    let formdata = new FormData()
+                    formdata.append("businessId",userid)
+                    formdata.append("token",UserToken)
+                    formdata.append("productId",productid)
+                    let chatid = ""
+                    CreateChat(formdata).then(res=>{
+                        if (res === -1){
+                            ElMessage.error('卖买家不能是一个人');
+                        }
+                        else {
+                            chatid = res
+                            router.push({name:'ChatRoom', params:{CellerUserId:userid,ChatId:chatid}})
+                        }
 
-                })
+                    })
                 }else{
                     ElMessage.error('请先进行登录')
                 }

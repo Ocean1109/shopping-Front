@@ -40,7 +40,8 @@
                 GenerateOrder(OrderData).then(res=>{
                     if (res.code === 0  && Page == undefined ){
                         ElMessage.success('支付订单成功');
-                        Router.push({name:'ShoppingCar', params:{State:true, Order:OrderDataString}})
+                        // Router.push({name:'ShoppingCar', params:{State:true, Order:OrderDataString}})
+                        router.push({path:'ShoppingCar'})
                     }else if(res.code === 0 && Page == 1){
                         ElMessage.success('支付订单成功');
                         router.push({path:'/'})

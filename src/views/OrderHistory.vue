@@ -38,7 +38,7 @@
 
         <!--具体订单信息-->
         <div class="product" v-for="(order,index) in OrderInfo.Orderlist" :key="order" style="text-align: center;line-height: 150px">
-            <div v-for="item in order.productList" :key="item">
+            <div v-for="(item,itemindex) in order.productList" :key="item">
                 <el-row>
                     <el-col :span="4" :offset="1" style="height: 150px">
                         <img :src="item.productImage" style="width: 130px;height: 130px;margin-top: 10px" @click="ProductDesc(item.id)">
@@ -50,10 +50,10 @@
                         <span>{{item.productPrice}}</span>
                     </el-col>
                     <el-col :span="3" style="height: 150px">
-                        <span>1</span>
+                        <span>{{order.productNum[itemindex]}}</span>
                     </el-col>
                     <el-col :span="3" style="height: 150px">
-                        <span>{{item.productPrice}}</span>
+                        <span>{{item.productPrice*order.productNum[itemindex]}}</span>
                     </el-col>
                     <el-col :span="3" style="height: 150px">
                         <span>{{OrderInfo.State[index]}}</span>
@@ -105,6 +105,7 @@
                 GetOrder(formData).then(res => {
                     if (res.code === 0) {
                         //所有订单信息
+                        console.log(res.extendShoppingOrders)
                         OrderInfo.Orderlist = res.extendShoppingOrders;
                         for (let i = 0; i < OrderInfo.Orderlist.length; i++) {
                             if (OrderInfo.Orderlist[i].tradeStatus == 1) {

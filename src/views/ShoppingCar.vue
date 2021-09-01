@@ -93,7 +93,7 @@
                         <span>{{item.price}}</span>
                     </el-col>
                     <el-col :span="4" style="height: 150px">
-                        <el-input-number size="mini" v-model="item.productNumber" :min="1"></el-input-number>
+                        <el-input-number size="mini" v-model="item.productNumber" :min="1" @click="ChangeNum(index)"></el-input-number>
                     </el-col>
                     <el-col :span="4" style="height: 150px">
                         <span>{{item.productNumber*item.price}}</span>
@@ -135,7 +135,7 @@
     import {reactive,ref} from 'vue'
     import {useRoute, useRouter} from "vue-router";
     import GLOBAL from "../components/GlobalVariable"
-    import {ShoppingUserToken, ShoppingDelete, SearchProduct} from "../http/api";
+    import {ShoppingUserToken, ShoppingChange, SearchProduct} from "../http/api";
 
     export default {
         name: "ShoppingCar",
@@ -167,14 +167,22 @@
 
             let Message = ref();
 
+            //购物车商品数量最初状态
+            let ProductNumArray = [];
+
             //将用户token传递到后端，并且获取该用户购物车的信息
             ShoppingUserToken(formData).then(res=>{
                 ShoppingCartProduct.Product = res;
+                // console.log(ShoppingCartProduct.Product)
                 //判断购物车是否为空
                 if(ShoppingCartProduct.Product.length == 0){
                     Message.value = "购物车为空"
                 }
-
+                //保存购物车商品数量最初状态
+                for (let i=0;i<ShoppingCartProduct.Product.length;i++) {
+                    ProductNumArray.push(ShoppingCartProduct.Product[i].productNumber)
+                }
+                // console.log(ProductNumArray)
             })
 
             //点击图片查看详细信息
@@ -219,18 +227,63 @@
                 ModifyData.num = ShoppingCartProduct.Product[index].productNumber;
                 ModifyData.operate=1;
                 ModifyData.productId = ShoppingCartProduct.Product[index].id;
-                ShoppingDelete(ModifyData).then(res=>{
-                    ShoppingCartProduct.Product = res;
+                // console.log(ModifyData)
+                ShoppingChange(ModifyData).then(res=>{
+                    ShoppingCartProduct.Product = res.shoppingCartListInfos;
+                    // console.log(ShoppingCartProduct.Product)
                 })
+            }
+
+            //修改购物车商品数量
+            let ChangeNum = (index)=>{
+                // console.log(ShoppingCartProduct.Product[index])
+                // console.log(ShoppingCartProduct.Product[index].productNumber)
+                // console.log(ProductNumArray[index])
+                if (ShoppingCartProduct.Product[index].productNumber > ProductNumArray[index]){
+                    ModifyData.operate = 0;
+                    ModifyData.productId = ShoppingCartProduct.Product[index].id;
+                    ModifyData.token = usertoken;
+                    ModifyData.num = ShoppingCartProduct.Product[index].productNumber - ProductNumArray[index];
+                    // console.log(ProductNumArray)
+                    // console.log(ModifyData)
+                    ShoppingChange(ModifyData).then(res=>{
+                        ShoppingCartProduct.Product = res.shoppingCartListInfos;
+                        for (let i=0;i<ShoppingCartProduct.Product.length;i++) {
+                            ProductNumArray[i] = ShoppingCartProduct.Product[i].productNumber;
+                        }
+                        // console.log(ShoppingCartProduct.Product)
+                    })
+                }
+                else if(ShoppingCartProduct.Product[index].productNumber < ProductNumArray[index]){
+                    ModifyData.operate = 1;
+                    ModifyData.productId = ShoppingCartProduct.Product[index].id;
+                    ModifyData.token = usertoken;
+                    ModifyData.num = ProductNumArray[index] - ShoppingCartProduct.Product[index].productNumber;
+
+                    // console.log(ProductNumArray[index])
+                    // console.log(ModifyData)
+                    ShoppingChange(ModifyData).then(res=>{
+                        ShoppingCartProduct.Product = res.shoppingCartListInfos;
+                        for (let i=0;i<ShoppingCartProduct.Product.length;i++) {
+                            ProductNumArray[i] = ShoppingCartProduct.Product[i].productNumber;
+                        }
+                        // console.log(ShoppingCartProduct.Product)
+                    })
+                }
+
             }
 
             //商品勾选功能
             let Choose =(divId,index)=> {
                 //获取选中商品的id
                 let productid = document.getElementById(divId)
+                // console.log(divId)
+                // console.log(productid)
+                // console.log(typeof (productid))
                 //选中商品
                 if (ShoppingCartProduct.Product[index].type==0){
                     ShoppingCartProduct.Product[index].type=1;
+                    //购物商品种类数量+1
                     PurchaseNum.value = PurchaseNum.value+1;
                     Amount.value = Amount.value + ShoppingCartProduct.Product[index].price*ShoppingCartProduct.Product[index].productNumber;
                     productid.style.backgroundColor="#f0cdd8";
@@ -244,21 +297,53 @@
                 }
             }
 
+            //默认商品对象类型，0表示未选中，1表示选中
+            let productType = ref(0)
             //全选功能
             let ChooseAll =()=>{
-                for (let i=0;i<ShoppingCartProduct.Product.length;i++){
-                    ShoppingCartProduct.Product[i].type=1;
-                    PurchaseNum.value = PurchaseNum.value + 1;
-                    Amount.value = Amount.value + ShoppingCartProduct.Product[i].price*ShoppingCartProduct.Product[i].productNumber;
+                // let productIdArray = []
+
+                if(productType.value == 0) {
+                    productType.value = 1;
+                    for (let i = 0; i < ShoppingCartProduct.Product.length; i++) {
+                        if (ShoppingCartProduct.Product[i].type == 0 ) {
+                            let producttempid = "product" + i;
+                            let productid = document.getElementById(producttempid)
+                            ShoppingCartProduct.Product[i].type = 1;
+                            PurchaseNum.value = PurchaseNum.value + 1;
+                            Amount.value = Amount.value + ShoppingCartProduct.Product[i].price * ShoppingCartProduct.Product[i].productNumber;
+                            //修改颜色
+                            productid.style.backgroundColor = "#f0cdd8"
+                        }
+                    }
+                    // console.log(productType)
+                }
+                else {
+                    productType.value = 0;
+                    for (let i = 0; i < ShoppingCartProduct.Product.length; i++) {
+                        let producttempid = "product" + i;
+                        let productid = document.getElementById(producttempid)
+                        ShoppingCartProduct.Product[i].type = 0;
+                        PurchaseNum.value = 0;
+                        Amount.value = 0;
+                        //修改颜色
+                        productid.style.backgroundColor = "#ebebeb"
+                    }
                 }
             }
 
             //取消功能，将所有选中的商品取消选中
             let Cancel = ()=>{
                 for (let i=0;i<ShoppingCartProduct.Product.length;i++){
+                    //获得所有商品的divId
+                    let producttempid = "product" + i;
+                    let productid = document.getElementById(producttempid)
+                    //修改数据库商品默认类型为0,0表示未选中
                     ShoppingCartProduct.Product[i].type=0;
                     PurchaseNum.value =0;
                     Amount.value = 0;
+                    //修改颜色
+                    productid.style.backgroundColor = "#ebebeb"
                 }
             }
 
@@ -267,6 +352,7 @@
             let OrderData = reactive({
                 token:'',
                 productIds:[],
+                num:[]
             })
 
 
@@ -277,9 +363,21 @@
                     if (ShoppingCartProduct.Product[i].type==1){
                         //添加数组数据
                         OrderData.productIds.push(ShoppingCartProduct.Product[i].id)
+                        //添加商品数量
+                        OrderData.num.push(ShoppingCartProduct.Product[i].productNumber)
+
+                        //结算后默认成功支付，购物车删除选中的商品
+                        ModifyData.num = ShoppingCartProduct.Product[i].productNumber;
+                        ModifyData.operate=1;
+                        ModifyData.productId = ShoppingCartProduct.Product[i].id;
+                        // console.log(ModifyData)
+                        ShoppingChange(ModifyData).then(res=>{
+                            ShoppingCartProduct.Product = res.shoppingCartListInfos;
+                            // console.log(ShoppingCartProduct.Product)
+                        })
                     }
                 }
-
+                // console.log(OrderData)
                 let OrderDataString = JSON.stringify(OrderData)
                 router.push({name:'Payment', params:{order:OrderDataString}})
             }
@@ -288,23 +386,27 @@
             const route = useRoute();
             PaymentState = route.params.State;
 
-            //重新接收OrderData数据，因为页面刷新会清空数据
-            let OrderDataString = route.params.Order;
-            if(OrderDataString!=undefined){
-                let orderData = JSON.parse(OrderDataString)
-                //将成功支付的商品删除
-                if (PaymentState == "true"){
-                    for (let i=0;i<orderData.productIds.length;i++){
-                        ModifyData.productId = orderData.productIds[i];
-                        ModifyData.num = 1;
-                        ModifyData.operate=1;
-                        ShoppingDelete(ModifyData).then(res=>{
-                            ShoppingCartProduct.Product = res;
-                        })
-                    }
-                }
-                OrderDataString = undefined
-            }
+            // //重新接收OrderData数据，因为页面刷新会清空数据
+            // let OrderDataString = route.params.Order;
+            //
+            // if(OrderDataString!=undefined){
+            //     let orderData = JSON.parse(OrderDataString)
+            //     console.log(orderData)
+            //     //将成功支付的商品删除
+            //     if (PaymentState == "true"){
+            //         for (let i=0;i<orderData.productIds.length;i++){
+            //             ModifyData.productId = orderData.productIds[i];
+            //             ModifyData.num = 1;
+            //             ModifyData.operate=1;
+            //             ShoppingChange(ModifyData).then(res=>{
+            //                 ShoppingCartProduct.Product = res;
+            //             })
+            //         }
+            //     }
+            //     OrderDataString = undefined
+            // }
+
+
 
             return{
                 Choose,
@@ -323,7 +425,8 @@
                 ModifyData,
                 UserName,
                 OrderData,
-                ProductDesc
+                ProductDesc,
+                ChangeNum
             }
         },
         methods:{

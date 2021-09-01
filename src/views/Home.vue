@@ -162,22 +162,49 @@
 
 <script>
   import {reactive} from 'vue'
-  import {allProduct, SearchProduct} from "../http/api"
+  import {allProduct, SearchProduct,keepLogin} from "../http/api"
   import {useRouter} from 'vue-router';
   import GLOBAL from "../components/GlobalVariable"
   import {ElMessage} from "element-plus";
   export default{
 
     name: 'Home',
+    // mounted() {
+    //   keepLogin().then(res=>{
+    //     console.log(res)
+    //     GLOBAL.token.value = res.message;
+    //     GLOBAL.userName.value = res.userName;
+    //     //用户token和用户名
+    //     // let UserToken = GLOBAL.token.value;
+    //     // let UserName = GLOBAL.userName.value;
+    //
+    //   })
+    // },
     setup(){
       //搜索关键词
       let searchData = reactive({
         searchKey:''
       });
 
+      console.log(GLOBAL.token.value)
+      keepLogin().then(res=>{
+        console.log(res)
+        GLOBAL.token.value = res.message;
+        GLOBAL.userName.value = res.userName;
+        router.push('/')
+
+
+        console.log("跳转结束")
+        //用户token和用户名
+        // let UserToken = GLOBAL.token.value;
+        // let UserName = GLOBAL.userName.value;
+
+      })
+
       //用户token和用户名
       let UserToken = GLOBAL.token.value;
       let UserName = GLOBAL.userName.value;
+
 
       //分类数组
       let ProductCategory1 = reactive(
@@ -215,6 +242,8 @@
       const ProductItems = reactive({
         products: []
       })
+
+
 
       //交互，从后端传来的数据
       allProduct().then(res=>{
