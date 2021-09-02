@@ -14,12 +14,12 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <div v-if="usertoken==0">
+                <div v-if="UserToken=='未登录'">
                     <router-link to="/login" style="text-decoration: none">
                         点击这里，登录
                     </router-link>
                 </div>
-                <div v-if="usertoken!=0">
+                <div v-if="UserToken!='未登录'">
                     <span>你好，{{UserName}}</span>
                 </div>
             </el-menu-item>
@@ -27,6 +27,9 @@
                 <router-link to="/register" style="text-decoration: none">
                     立即注册
                 </router-link>
+            </el-menu-item>
+            <el-menu-item index="6">
+                <span @click="SignOut">退出登录</span>
             </el-menu-item>
         </el-menu>
         <!--搜索框-->
@@ -135,11 +138,26 @@
     import {reactive,ref} from 'vue'
     import {useRoute, useRouter} from "vue-router";
     import GLOBAL from "../components/GlobalVariable"
-    import {ShoppingUserToken, ShoppingChange, SearchProduct} from "../http/api";
+    import {ShoppingUserToken, ShoppingChange, SearchProduct, keepLogin} from "../http/api";
 
     export default {
         name: "ShoppingCar",
-
+        beforeCreate() {
+            keepLogin().then(res=>{
+                GLOBAL.token.value = res.message;
+                GLOBAL.userName.value = res.userName;
+                //用户token和用户名
+                this.UserToken = GLOBAL.token.value;
+                this.UserName = GLOBAL.userName.value;
+                // console.log(this.UserToken)
+            })
+        },
+        data(){
+            return{
+                UserToken:0,
+                UserName:0
+            }
+        },
         setup(){
 
             //声明购物车商品信息——从后端获取
@@ -158,12 +176,24 @@
             )
 
             //用户token和用户名
-            let usertoken = GLOBAL.token.value
-            let UserName = GLOBAL.userName.value;
-            const formData=new FormData()
-            formData.append("token",usertoken.toString())
+            let userToken = GLOBAL.token.value
+            let userName = GLOBAL.userName.value;
 
-            ModifyData.token = usertoken;
+            //获取cookie中的token
+            let Cookie = document.cookie;
+            let Cookie_temp = Cookie.split(';')
+            for (let i=0;i<Cookie_temp.length;i++){
+                let Cookie_single = Cookie_temp[i].split('=');
+                //trim()删除字符串的头尾空白符
+                if (Cookie_single[0].trim() === "token"){
+                    let Cookie_fin = Cookie_single[1]
+                    userToken = Cookie_fin
+                }
+            }
+
+            const formData=new FormData();
+            formData.append("token",userToken.toString());
+            ModifyData.token = userToken;
 
             let Message = ref();
 
@@ -172,8 +202,9 @@
 
             //将用户token传递到后端，并且获取该用户购物车的信息
             ShoppingUserToken(formData).then(res=>{
+                console.log(formData)
                 ShoppingCartProduct.Product = res;
-                // console.log(ShoppingCartProduct.Product)
+                console.log(ShoppingCartProduct.Product)
                 //判断购物车是否为空
                 if(ShoppingCartProduct.Product.length == 0){
                     Message.value = "购物车为空"
@@ -242,7 +273,7 @@
                 if (ShoppingCartProduct.Product[index].productNumber > ProductNumArray[index]){
                     ModifyData.operate = 0;
                     ModifyData.productId = ShoppingCartProduct.Product[index].id;
-                    ModifyData.token = usertoken;
+                    ModifyData.token = userToken;
                     ModifyData.num = ShoppingCartProduct.Product[index].productNumber - ProductNumArray[index];
                     // console.log(ProductNumArray)
                     // console.log(ModifyData)
@@ -257,7 +288,7 @@
                 else if(ShoppingCartProduct.Product[index].productNumber < ProductNumArray[index]){
                     ModifyData.operate = 1;
                     ModifyData.productId = ShoppingCartProduct.Product[index].id;
-                    ModifyData.token = usertoken;
+                    ModifyData.token = userToken;
                     ModifyData.num = ProductNumArray[index] - ShoppingCartProduct.Product[index].productNumber;
 
                     // console.log(ProductNumArray[index])
@@ -358,7 +389,7 @@
 
             //结算  统计选中的商品id
             let pay =()=>{
-                OrderData.token = usertoken;
+                OrderData.token = userToken;
                 for (let i=0;i<ShoppingCartProduct.Product.length;i++){
                     if (ShoppingCartProduct.Product[i].type==1){
                         //添加数组数据
@@ -370,10 +401,10 @@
                         ModifyData.num = ShoppingCartProduct.Product[i].productNumber;
                         ModifyData.operate=1;
                         ModifyData.productId = ShoppingCartProduct.Product[i].id;
-                        // console.log(ModifyData)
+                        console.log(ModifyData)
                         ShoppingChange(ModifyData).then(res=>{
                             ShoppingCartProduct.Product = res.shoppingCartListInfos;
-                            // console.log(ShoppingCartProduct.Product)
+                            console.log(ShoppingCartProduct.Product)
                         })
                     }
                 }
@@ -419,11 +450,11 @@
                 Amount,
                 ChooseAll,
                 Cancel,
-                usertoken,
+                userToken,
                 ShoppingCartProduct,
                 Message,
                 ModifyData,
-                UserName,
+                userName,
                 OrderData,
                 ProductDesc,
                 ChangeNum

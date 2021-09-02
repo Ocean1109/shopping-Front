@@ -4,22 +4,22 @@
     <!--导航栏-->
     <el-menu  class="el-menu-demo" mode="horizontal" >
       <el-menu-item index="1">
-        <div v-if="UserToken !=0">
+        <div v-if="UserToken !='未登录'">
           <router-link to="/PersonPage" style="text-decoration: none">
             个人中心
           </router-link>
         </div>
-        <div v-if="UserToken ==0">
+        <div v-if="UserToken =='未登录'">
           <span @click="Warning">个人中心</span>
         </div>
       </el-menu-item>
       <el-menu-item index="2">
-        <div v-if="UserToken !=0">
+        <div v-if="UserToken !='未登录'">
           <router-link to="/ShoppingCar" style="text-decoration: none">
             我的购物车
           </router-link>
         </div>
-        <div v-if="UserToken ==0">
+        <div v-if="UserToken =='未登录'">
           <span @click="Warning">我的购物车</span>
         </div>
       </el-menu-item>
@@ -29,12 +29,12 @@
         </router-link>
       </el-menu-item>
       <el-menu-item index="4">
-        <div v-if="UserToken==0">
+        <div v-if="UserToken=='未登录'">
           <router-link to="/login" style="text-decoration: none">
             点击这里，登录
           </router-link>
         </div>
-        <div v-if="UserToken!=0">
+        <div v-if="UserToken!='未登录'">
           <span>你好，{{UserName}}</span>
         </div>
       </el-menu-item>
@@ -42,6 +42,9 @@
         <router-link to="/register" style="text-decoration: none">
           立即注册
         </router-link>
+      </el-menu-item>
+      <el-menu-item index="6">
+        <span @click="SignOut">退出登录</span>
       </el-menu-item>
     </el-menu>
     <!--搜索框-->
@@ -171,13 +174,12 @@
     name: 'Home',
     beforeCreate() {
       keepLogin().then(res=>{
-        console.log(res)
         GLOBAL.token.value = res.message;
         GLOBAL.userName.value = res.userName;
         //用户token和用户名
         this.UserToken = GLOBAL.token.value;
         this.UserName = GLOBAL.userName.value;
-
+        // console.log(this.UserToken)
       })
     },
     data(){
@@ -191,21 +193,6 @@
       let searchData = reactive({
         searchKey:''
       });
-
-      console.log(GLOBAL.token.value)
-      // keepLogin().then(res=>{
-      //   console.log(res)
-      //   GLOBAL.token.value = res.message;
-      //   GLOBAL.userName.value = res.userName;
-      //   router.push('/')
-      //
-      //
-      //   console.log("跳转结束")
-      //   //用户token和用户名
-      //   this.UserToken = GLOBAL.token.value;
-      //   this.UserName = GLOBAL.userName.value;
-      //
-      // })
 
       //分类数组
       let ProductCategory1 = reactive(
@@ -286,6 +273,13 @@
       let Warning = ()=>{
         ElMessage.error('请先进行登录');
       }
+
+      //退出登录
+      let SignOut = ()=>{
+
+        ElMessage.success('退出成功')
+        router.push('/')
+      }
       return{
         searchData,
         searchBtn,
@@ -297,7 +291,8 @@
         ProductCategory3,
         ProductCategory4,
         ProductCategory5,
-        Warning
+        Warning,
+        SignOut
       }
     }
   }

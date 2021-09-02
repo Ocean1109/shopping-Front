@@ -18,12 +18,12 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <div v-if="UserToken==0">
+                <div v-if="UserToken=='未登录'">
                     <router-link to="/login" style="text-decoration: none">
                         点击这里，登录
                     </router-link>
                 </div>
-                <div v-if="UserToken!=0">
+                <div v-if="UserToken!='未登录'">
                     <span>你好，{{UserName}}</span>
                 </div>
             </el-menu-item>
@@ -31,6 +31,9 @@
                 <router-link to="/register" style="text-decoration: none">
                     立即注册
                 </router-link>
+            </el-menu-item>
+            <el-menu-item index="6">
+                <span @click="SignOut">退出登录</span>
             </el-menu-item>
         </el-menu>
 
@@ -87,10 +90,26 @@
     // import {reactive} from "vue"
     import {useRoute, useRouter} from "vue-router";
     import {reactive} from "vue";
-    import {allProduct} from "../http/api";
+    import {allProduct, keepLogin} from "../http/api";
+    import GLOBAL from "../components/GlobalVariable";
 
     export default {
         name: "SearchProductList",
+        beforeCreate() {
+            keepLogin().then(res=>{
+                GLOBAL.token.value = res.message;
+                GLOBAL.userName.value = res.userName;
+                //用户token和用户名
+                this.UserToken = GLOBAL.token.value;
+                this.UserName = GLOBAL.userName.value;
+            })
+        },
+        data(){
+            return{
+                UserToken:0,
+                UserName:0
+            }
+        },
         setup(){
 
             //创建路由，将关键字通过路由传递到其他页面

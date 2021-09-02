@@ -14,12 +14,12 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <div v-if="userToken==0">
+                <div v-if="UserToken=='未登录'">
                     <router-link to="/login" style="text-decoration: none">
                         点击这里，登录
                     </router-link>
                 </div>
-                <div v-if="userToken!=0">
+                <div v-if="UserToken!='未登录'">
                     <span>你好，{{UserName}}</span>
                 </div>
             </el-menu-item>
@@ -27,6 +27,9 @@
                 <router-link to="/register" style="text-decoration: none">
                     立即注册
                 </router-link>
+            </el-menu-item>
+            <el-menu-item index="6">
+                <span @click="SignOut">退出登录</span>
             </el-menu-item>
         </el-menu>
 
@@ -61,18 +64,34 @@
     import GLOBAL from "../components/GlobalVariable"
 
     import router from "../router/index"
+    import {keepLogin} from "../http/api";
     export default {
         name: "PersonPage",
-
+        beforeCreate() {
+            keepLogin().then(res=>{
+                GLOBAL.token.value = res.message;
+                GLOBAL.userName.value = res.userName;
+                //用户token和用户名
+                this.UserToken = GLOBAL.token.value;
+                this.UserName = GLOBAL.userName.value;
+                // console.log(this.UserToken)
+            })
+        },
+        data(){
+            return{
+                UserToken:0,
+                UserName:0
+            }
+        },
         setup(){
             //用户token和用户名
-            let userToken = GLOBAL.token.value;
-            let UserName = GLOBAL.userName.value;
+            // let userToken = GLOBAL.token.value;
+            // let UserName = GLOBAL.userName.value;
             let TableList = router.options.routes[6].children;
             return{
                 TableList,
-                userToken,
-                UserName
+                // userToken,
+                // UserName
             }
         },
 

@@ -3,22 +3,22 @@
         <!--导航栏-->
         <el-menu  class="el-menu-demo" mode="horizontal" >
             <el-menu-item index="1">
-                <div v-if="UserToken !=0">
+                <div v-if="UserToken !='未登录'">
                     <router-link to="/PersonPage" style="text-decoration: none">
                         个人中心
                     </router-link>
                 </div>
-                <div v-if="UserToken ==0">
+                <div v-if="UserToken =='未登录'">
                     <span @click="Warning">个人中心</span>
                 </div>
             </el-menu-item>
             <el-menu-item index="2">
-                <div v-if="UserToken !=0">
+                <div v-if="UserToken !='未登录'">
                     <router-link to="/ShoppingCar" style="text-decoration: none">
                         我的购物车
                     </router-link>
                 </div>
-                <div v-if="UserToken ==0">
+                <div v-if="UserToken =='未登录'">
                     <span @click="Warning">我的购物车</span>
                 </div>
             </el-menu-item>
@@ -28,12 +28,12 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <div v-if="UserToken==0">
+                <div v-if="UserToken=='未登录'">
                     <router-link to="/login" style="text-decoration: none">
                         点击这里，登录
                     </router-link>
                 </div>
-                <div v-if="UserToken!=0">
+                <div v-if="UserToken!='未登录'">
                     <span>你好，{{UserName}}</span>
                 </div>
             </el-menu-item>
@@ -41,6 +41,9 @@
                 <router-link to="/register" style="text-decoration: none">
                     立即注册
                 </router-link>
+            </el-menu-item>
+            <el-menu-item index="6">
+                <span @click="SignOut">退出登录</span>
             </el-menu-item>
         </el-menu>
         <!--搜索框-->
@@ -139,16 +142,33 @@
     import {useRoute, useRouter} from "vue-router";
     import {reactive,ref} from "vue";
     import GLOBAL from "../components/GlobalVariable";
-    import {GetDetailProductInfo, SearchProduct, ShoppingAdd, CreateChat} from "../http/api";
+    import {GetDetailProductInfo, SearchProduct, ShoppingAdd, CreateChat, keepLogin} from "../http/api";
     import {ElMessage} from "element-plus";
 
     export default {
         name: "DetailProductInfo",
+        beforeCreate() {
+            keepLogin().then(res=>{
+                GLOBAL.token.value = res.message;
+                GLOBAL.userName.value = res.userName;
+                //用户token和用户名
+                this.UserToken = GLOBAL.token.value;
+                this.UserName = GLOBAL.userName.value;
+                // console.log(this.UserToken)
+            })
+        },
+        data(){
+            return{
+                UserToken:0,
+                UserName:0
+            }
+        },
         setup(){
 
             //用户token和用户名
-            let UserToken = GLOBAL.token.value
-            let UserName = GLOBAL.userName.value;
+            let userToken = GLOBAL.token.value
+            let userName = GLOBAL.userName.value;
+            console.log(userToken)
 
             //创建路由，将关键字通过路由传递到其他页面
             const router = useRouter();
@@ -205,7 +225,7 @@
                 //0代表添加商品
                 AddProduct.operate = 0;
                 AddProduct.productId = ProductId;
-                AddProduct.token = UserToken;
+                AddProduct.token = userToken;
                 AddProduct.num = ProductNum;
                 if (ProductNum.value > DetailProduct.product.numbers){
                     ElMessage.error('库存不足');
@@ -237,7 +257,7 @@
                 }
                 else {
 
-                    PayementData.token = UserToken;
+                    PayementData.token = userToken;
                     PayementData.productIds[0] = ProductId;
                     PayementData.num[0] = ProductNum.value;
                     let OrderDataString = JSON.stringify(PayementData)
@@ -247,10 +267,10 @@
 
             //联系卖家
             let ChatSeller = (userid,productid)=>{
-                if (UserToken != 0){
+                if (userToken != '未登录'){
                     let formdata = new FormData()
                     formdata.append("businessId",userid)
-                    formdata.append("token",UserToken)
+                    formdata.append("token",userToken)
                     formdata.append("productId",productid)
                     let chatid = ""
                     CreateChat(formdata).then(res=>{
@@ -277,8 +297,8 @@
             return{
                 searchBtn,
                 searchData,
-                UserToken,
-                UserName,
+                userToken,
+                userName,
                 DetailProduct,
                 ProductId,
                 ProductNum,

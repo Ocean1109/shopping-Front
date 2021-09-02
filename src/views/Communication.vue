@@ -14,12 +14,12 @@
             </el-menu-item>
             <el-menu-item index="3">联系我们</el-menu-item>
             <el-menu-item index="4">
-                <div v-if="userToken==0">
+                <div v-if="UserToken=='未登录'">
                     <router-link to="/login" style="text-decoration: none">
                         点击这里，登录
                     </router-link>
                 </div>
-                <div v-if="userToken!=0">
+                <div v-if="UserToken!='未登录'">
                     <span>你好，{{UserName}}</span>
                 </div>
             </el-menu-item>
@@ -27,6 +27,9 @@
                 <router-link to="/register" style="text-decoration: none">
                     立即注册
                 </router-link>
+            </el-menu-item>
+            <el-menu-item index="6">
+                <span @click="SignOut">退出登录</span>
             </el-menu-item>
         </el-menu>
         <!--logo-->
@@ -62,14 +65,31 @@
     import {ElMessage} from "element-plus";
     import {ref} from  "vue"
     import {useRouter} from "vue-router";
+    import {keepLogin} from "../http/api";
 
     export default {
         name: "Communication",
+        beforeCreate() {
+            keepLogin().then(res=>{
+                GLOBAL.token.value = res.message;
+                GLOBAL.userName.value = res.userName;
+                //用户token和用户名
+                this.UserToken = GLOBAL.token.value;
+                this.UserName = GLOBAL.userName.value;
+                // console.log(this.UserToken)
+            })
+        },
+        data(){
+            return{
+                UserToken:0,
+                UserName:0
+            }
+        },
         setup(){
 
             let text = ref('');
-            let UserToken = GLOBAL.token.value;
-            let UserName = GLOBAL.userName.value;
+            // let UserToken = GLOBAL.token.value;
+            // let UserName = GLOBAL.userName.value;
 
             //创建路由，将关键字通过路由传递到其他页面
             const router = useRouter();
@@ -83,8 +103,8 @@
             }
 
             return{
-                UserName,
-                UserToken,
+                // UserName,
+                // UserToken,
                 commit,
                 text
             }

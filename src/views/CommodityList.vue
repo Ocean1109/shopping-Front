@@ -3,22 +3,22 @@
         <!--导航栏-->
         <el-menu  class="el-menu-demo" mode="horizontal" >
             <el-menu-item index="1">
-                <div v-if="UserToken !=0">
+                <div v-if="UserToken !='未登录'">
                     <router-link to="/PersonPage" style="text-decoration: none">
                         个人中心
                     </router-link>
                 </div>
-                <div v-if="UserToken ==0">
+                <div v-if="UserToken =='未登录'">
                     <span @click="Warning">个人中心</span>
                 </div>
             </el-menu-item>
             <el-menu-item index="2">
-                <div v-if="UserToken !=0">
+                <div v-if="UserToken !='未登录'">
                     <router-link to="/ShoppingCar" style="text-decoration: none">
                         我的购物车
                     </router-link>
                 </div>
-                <div v-if="UserToken ==0">
+                <div v-if="UserToken =='未登录'">
                     <span @click="Warning">我的购物车</span>
                 </div>
             </el-menu-item>
@@ -28,12 +28,12 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <div v-if="UserToken==0">
+                <div v-if="UserToken=='未登录'">
                     <router-link to="/login" style="text-decoration: none">
                         点击这里，登录
                     </router-link>
                 </div>
-                <div v-if="UserToken!=0">
+                <div v-if="UserToken!='未登录'">
                     <span>你好，{{UserName}}</span>
                 </div>
             </el-menu-item>
@@ -41,6 +41,9 @@
                 <router-link to="/register" style="text-decoration: none">
                     立即注册
                 </router-link>
+            </el-menu-item>
+            <el-menu-item index="6">
+                <span @click="SignOut">退出登录</span>
             </el-menu-item>
         </el-menu>
         <!--搜索框-->
@@ -121,17 +124,33 @@
 <script>
     import {reactive} from "vue";
     import {useRoute, useRouter} from 'vue-router';
-    import {ProductListOne, ProductListTwo, ProductListThree, allProduct, SearchProduct} from "../http/api";
+    import {ProductListOne, ProductListTwo, ProductListThree, allProduct, SearchProduct, keepLogin} from "../http/api";
     import GLOBAL from "../components/GlobalVariable"
     import {ElMessage} from "element-plus";
 
     export default {
         name: "CommodityList",
+        beforeCreate() {
+            keepLogin().then(res=>{
+                GLOBAL.token.value = res.message;
+                GLOBAL.userName.value = res.userName;
+                //用户token和用户名
+                this.UserToken = GLOBAL.token.value;
+                this.UserName = GLOBAL.userName.value;
+                // console.log(this.UserToken)
+            })
+        },
+        data(){
+            return{
+                UserToken:0,
+                UserName:0
+            }
+        },
         setup(){
 
             //用户token和用户名
-            let UserToken = GLOBAL.token.value
-            let UserName = GLOBAL.userName.value;
+            // let UserToken = GLOBAL.token.value
+            // let UserName = GLOBAL.userName.value;
             //搜索关键词
             let searchData = reactive({
                 searchKey:''
@@ -258,8 +277,8 @@
                 ChooseType,
                 searchData,
                 searchBtn,
-                UserToken,
-                UserName,
+                // UserToken,
+                // UserName,
                 DetailProduct,
                 HomeProductItems,
                 Warning
