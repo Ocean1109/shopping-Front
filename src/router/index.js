@@ -11,8 +11,15 @@ import DetailProductInfo from "../views/DetailProductInfo"
 import SearchProductList from "../views/SearchProductList";
 import ChatRoom from "../views/ChatRoom";
 import test from "../views/test"
+import DataHome from "../views/DataHome";
 
 const routes = [
+  {
+    //数据分析主页
+    path: '/DataHome',
+    name: 'DataHome',
+    component: DataHome
+  },
   {
     //主页
     path: '/',

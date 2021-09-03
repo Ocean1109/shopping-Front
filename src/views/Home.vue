@@ -3,6 +3,11 @@
   <div class="home">
     <!--导航栏-->
     <el-menu  class="el-menu-demo" mode="horizontal" >
+      <el-menu-item index="0">
+        <router-link to="/DataHome" style="text-decoration: none">
+          数据分析
+        </router-link>
+      </el-menu-item>
       <el-menu-item index="1">
         <div v-if="UserToken !='未登录'">
           <router-link to="/PersonPage" style="text-decoration: none">
