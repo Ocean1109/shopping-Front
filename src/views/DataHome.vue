@@ -1,6 +1,11 @@
 <template>
   <div class="DataHome">
-    <DataSidebar :getDataSideBarChoice="getDataSideBarChoice"></DataSidebar>
+    <el-row>
+      <el-col>
+        <DataSidebar :getDataSideBarChoice="getDataSideBarChoice"></DataSidebar>
+      </el-col>
+    </el-row>
+
   </div>
 </template>
 

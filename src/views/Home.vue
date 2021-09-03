@@ -9,22 +9,22 @@
         </router-link>
       </el-menu-item>
       <el-menu-item index="1">
-        <div v-if="UserToken !='未登录'">
+        <div v-if="isLogin">
           <router-link to="/PersonPage" style="text-decoration: none">
             个人中心
           </router-link>
         </div>
-        <div v-if="UserToken =='未登录'">
+        <div v-if="!isLogin">
           <span @click="Warning">个人中心</span>
         </div>
       </el-menu-item>
       <el-menu-item index="2">
-        <div v-if="UserToken !='未登录'">
+        <div v-if="isLogin">
           <router-link to="/ShoppingCar" style="text-decoration: none">
             我的购物车
           </router-link>
         </div>
-        <div v-if="UserToken =='未登录'">
+        <div v-if="!isLogin">
           <span @click="Warning">我的购物车</span>
         </div>
       </el-menu-item>
@@ -34,12 +34,12 @@
         </router-link>
       </el-menu-item>
       <el-menu-item index="4">
-        <div v-if="UserToken=='未登录'">
+        <div v-if="!isLogin">
           <router-link to="/login" style="text-decoration: none">
             点击这里，登录
           </router-link>
         </div>
-        <div v-if="UserToken!='未登录'">
+        <div v-if="isLogin">
           <span>你好，{{UserName}}</span>
         </div>
       </el-menu-item>
@@ -49,7 +49,7 @@
         </router-link>
       </el-menu-item>
       <el-menu-item index="6">
-        <span @click="SignOut">退出登录</span>
+        <span @click="SignOut" v-show="isLogin">退出登录</span>
       </el-menu-item>
     </el-menu>
     <!--搜索框-->
@@ -170,27 +170,51 @@
 
 <script>
   import {reactive} from 'vue'
-  import {allProduct, SearchProduct,keepLogin} from "../http/api"
+  import {allProduct, SearchProduct, keepLogin, logOut} from "../http/api"
   import {useRouter} from 'vue-router';
   import GLOBAL from "../components/GlobalVariable"
   import {ElMessage} from "element-plus";
   export default{
 
     name: 'Home',
-    beforeCreate() {
+    mounted() {
       keepLogin().then(res=>{
         GLOBAL.token.value = res.message;
         GLOBAL.userName.value = res.userName;
         //用户token和用户名
         this.UserToken = GLOBAL.token.value;
         this.UserName = GLOBAL.userName.value;
-        // console.log(this.UserToken)
+        if(this.UserToken !== '未登录'){
+          this.$store.commit('changeLoginState',{
+            isLogin:true
+          })
+        }else{
+          this.$store.commit('changeLoginState',{
+            isLogin:false
+          })
+        }
       })
     },
     data(){
       return{
         UserToken:0,
-        UserName:0
+        UserName:0,
+      }
+    },
+    computed:{
+      isLogin(){
+        return this.$store.state.isLogin
+      }
+    },
+    methods:{
+      //退出登录
+      SignOut(){
+        logOut()
+        this.$store.commit('changeLoginState',{
+          isLogin:false
+        })
+        ElMessage.success('退出成功')
+        this.$router.push('/')
       }
     },
     setup(){
@@ -278,13 +302,6 @@
       let Warning = ()=>{
         ElMessage.error('请先进行登录');
       }
-
-      //退出登录
-      let SignOut = ()=>{
-
-        ElMessage.success('退出成功')
-        router.push('/')
-      }
       return{
         searchData,
         searchBtn,
@@ -297,7 +314,6 @@
         ProductCategory4,
         ProductCategory5,
         Warning,
-        SignOut
       }
     }
   }

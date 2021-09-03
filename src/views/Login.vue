@@ -28,6 +28,7 @@
   import { ElMessage } from 'element-plus'
   import {login} from '../http/api'
   import router from "../router";
+  import store from "../store"
   import GLOBAL from "../components/GlobalVariable"
   export default {
     name:'Login',
@@ -50,6 +51,9 @@
         login(data).then(res=>{
           if (res.code===0){
             ElMessage.success('登陆成功');
+            store.commit('changeLoginState',{
+              isLogin:true
+            })
             GLOBAL.token.value = res.message;
             GLOBAL.userName.value = res.userName;
             router.push({path:'/'})

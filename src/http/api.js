@@ -1,5 +1,10 @@
 import $http from "./index";
 
+//退出登录
+export const logOut = ()=>{
+    return $http.get('/deleteTokenOfCookie')
+}
+
 //登录
 export const login = (data)=>{
     return $http.post('/login',data)

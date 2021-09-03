@@ -2,6 +2,11 @@
     <div class="home">
         <!--导航栏-->
         <el-menu  class="el-menu-demo" mode="horizontal" >
+          <el-menu-item index="0">
+            <router-link to="/DataHome" style="text-decoration: none">
+              数据分析
+            </router-link>
+          </el-menu-item>
             <el-menu-item index="1">
                 <router-link to="/PersonPage" style="text-decoration: none">
                     个人中心
@@ -29,7 +34,7 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="6">
-                <span @click="SignOut">退出登录</span>
+                <span @click="SignOut" v-show="isLogin">退出登录</span>
             </el-menu-item>
         </el-menu>
         <!--logo-->
@@ -65,20 +70,44 @@
     import {ElMessage} from "element-plus";
     import {ref} from  "vue"
     import {useRouter} from "vue-router";
-    import {keepLogin} from "../http/api";
+    import {keepLogin, logOut} from "../http/api";
 
     export default {
         name: "Communication",
-        beforeCreate() {
-            keepLogin().then(res=>{
-                GLOBAL.token.value = res.message;
-                GLOBAL.userName.value = res.userName;
-                //用户token和用户名
-                this.UserToken = GLOBAL.token.value;
-                this.UserName = GLOBAL.userName.value;
-                // console.log(this.UserToken)
+      mounted() {
+        keepLogin().then(res=>{
+          GLOBAL.token.value = res.message;
+          GLOBAL.userName.value = res.userName;
+          //用户token和用户名
+          this.UserToken = GLOBAL.token.value;
+          this.UserName = GLOBAL.userName.value;
+          if(this.UserToken !== '未登录'){
+            this.$store.commit('changeLoginState',{
+              isLogin:true
             })
-        },
+          }else{
+            this.$store.commit('changeLoginState',{
+              isLogin:false
+            })
+          }
+        })
+      },
+      methods:{
+        //退出登录
+        SignOut(){
+          logOut()
+          this.$store.commit('changeLoginState',{
+            isLogin:false
+          })
+          ElMessage.success('退出成功')
+          this.$router.push('/')
+        }
+      },
+      computed:{
+        isLogin(){
+          return this.$store.state.isLogin
+        }
+      },
         data(){
             return{
                 UserToken:0,
