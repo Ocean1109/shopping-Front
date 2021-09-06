@@ -11,15 +11,14 @@ import DetailProductInfo from "../views/DetailProductInfo"
 import SearchProductList from "../views/SearchProductList";
 import ChatRoom from "../views/ChatRoom";
 import test from "../views/test"
-<<<<<<< HEAD
+
 import ConsumerBehavior from "../views/Echarts/ConsumerBehavior";
 import SexStatistics from "../views/Echarts/SexStatistics";
 import AgeStatisticsBySex from "../views/Echarts/AgeStatisticsBySex";
-import ChinaMap from "../views/Echarts/ChinaMap";
-=======
+import ChinaMap from "../views/Echarts/ChinaMap"
+
 import DataHome from "../views/DataHome";
 
->>>>>>> 5ab06d039029b001624f7601af1b8d4d2c393e51
 const routes = [
   {
     //数据分析主页
