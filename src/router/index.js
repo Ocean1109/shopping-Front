@@ -15,10 +15,10 @@ import test from "../views/test"
 import DataHome from "../views/DataHome";
 
 
-import ConsumerBehavior from "../views/Echarts/ConsumerBehavior";
-import SexStatistics from "../views/Echarts/SexStatistics";
-import AgeStatisticsBySex from "../views/Echarts/AgeStatisticsBySex";
-import ChinaMap from "../views/Echarts/ChinaMap";
+// import ConsumerBehavior from "../views/Echarts/ConsumerBehavior";
+// import SexStatistics from "../views/Echarts/SexStatistics";
+// import AgeStatisticsBySex from "../views/Echarts/AgeStatisticsBySex";
+// import ChinaMap from "../views/Echarts/ChinaMap";
 
 const routes = [
   {
@@ -174,27 +174,27 @@ const routes = [
     path:'/test',
     name:'test',
     component:test
-  },{
-    //购买行为页面
-    path:'/ConsumerBehavior',
-    name:'ConsumerBehavior',
-    component:ConsumerBehavior
-  },{
-    //购买行为页面
-    path:'/SexStatistics',
-    name:'SexStatistics',
-    component:SexStatistics
-  },{
-    //不同年龄对比页面
-    path:'/AgeStatisticsBySex',
-    name:'AgeStatisticsBySex',
-    component:AgeStatisticsBySex
-  },{
-    //地图页面
-    path:'/ChinaMap',
-    name:'ChinaMap',
-    component:ChinaMap
-  }
+   },//{
+  //   //购买行为页面
+  //   path:'/ConsumerBehavior',
+  //   name:'ConsumerBehavior',
+  //   component:ConsumerBehavior
+  // },{
+  //   //购买行为页面
+  //   path:'/SexStatistics',
+  //   name:'SexStatistics',
+  //   component:SexStatistics
+  // },{
+  //   //不同年龄对比页面
+  //   path:'/AgeStatisticsBySex',
+  //   name:'AgeStatisticsBySex',
+  //   component:AgeStatisticsBySex
+  // },{
+  //   //地图页面
+  //   path:'/ChinaMap',
+  //   name:'ChinaMap',
+  //   component:ChinaMap
+  // }
 
 
 ]
