@@ -12,8 +12,8 @@
                 let myEchart = this.$echarts.init(document.getElementById("main"));
                 let option = {
                     title: {
-                        text: '漏斗图',
-                        subtext: '纯属虚构'
+                        text: '买家性别对比',
+                        // subtext: '纯属虚构'
                     },
                     tooltip: {
                         trigger: 'item',
@@ -32,7 +32,7 @@
 
                     series: [
                         {
-                            name:'漏斗图',
+                            name:'性别对比',
                             type:'funnel',
                             left: '10%',
                             top: 60,

@@ -20,7 +20,7 @@
                     },
                     series: [
                         {
-                            name: '访问来源',
+                            name: '买家消费行为',
                             type: 'pie',
                             radius: ['40%', '70%'],
                             avoidLabelOverlap: false,
@@ -44,10 +44,10 @@
                                 show: false
                             },
                             data: [
-                                {value: 1048, name: '搜索引擎'},
-                                {value: 735, name: '直接访问'},
-                                {value: 580, name: '邮件营销'},
-                                {value: 484, name: '联盟广告'}
+                                {value: 1048, name: '点击'},
+                                {value: 735, name: '添加购物车'},
+                                {value: 580, name: '特别关注'},
+                                {value: 484, name: '购买'}
                             ]
                         }
                     ]

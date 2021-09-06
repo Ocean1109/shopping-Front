@@ -11,7 +11,7 @@
 
         <el-menu-item :index="1">
           <i class="el-icon-menu"></i>
-          <span>所有买家各消费能力对比</span>
+          <span>所有买家各消费行为对比</span>
         </el-menu-item>
         <el-menu-item :index="2">
           <i class="el-icon-menu"></i>
