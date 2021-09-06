@@ -54,7 +54,7 @@
                 </div>
             </el-col>
             <el-col :span="2">
-                    <span style="float: left;margin-top: 60px;margin-left: 286px">
+                    <span style="float: left;margin-top: 60px;margin-left: 310px">
                         <el-button icon="el-icon-search" circle @click="searchBtn(searchData.searchKey)"></el-button>
                     </span>
             </el-col>

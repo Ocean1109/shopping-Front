@@ -2,11 +2,11 @@
     <div class="home">
         <!--导航栏-->
         <el-menu  class="el-menu-demo" mode="horizontal" >
-          <el-menu-item index="0">
-            <router-link to="/DataHome" style="text-decoration: none">
-              数据分析
-            </router-link>
-          </el-menu-item>
+            <el-menu-item index="0">
+                <router-link to="/DataHome" style="text-decoration: none">
+                    数据分析
+                </router-link>
+            </el-menu-item>
             <el-menu-item index="1">个人中心</el-menu-item>
             <el-menu-item index="2">
                 <router-link to="/ShoppingCar" style="text-decoration: none">
@@ -73,40 +73,40 @@
     import {ElMessage} from "element-plus";
     export default {
         name: "PersonPage",
-      mounted() {
-        keepLogin().then(res=>{
-          GLOBAL.token.value = res.message;
-          GLOBAL.userName.value = res.userName;
-          //用户token和用户名
-          this.UserToken = GLOBAL.token.value;
-          this.UserName = GLOBAL.userName.value;
-          if(this.UserToken !== '未登录'){
-            this.$store.commit('changeLoginState',{
-              isLogin:true
+        mounted() {
+            keepLogin().then(res=>{
+                GLOBAL.token.value = res.message;
+                GLOBAL.userName.value = res.userName;
+                //用户token和用户名
+                this.UserToken = GLOBAL.token.value;
+                this.UserName = GLOBAL.userName.value;
+                if(this.UserToken !== '未登录'){
+                    this.$store.commit('changeLoginState',{
+                        isLogin:true
+                    })
+                }else{
+                    this.$store.commit('changeLoginState',{
+                        isLogin:false
+                    })
+                }
             })
-          }else{
-            this.$store.commit('changeLoginState',{
-              isLogin:false
-            })
-          }
-        })
-      },
-      methods:{
-        //退出登录
-        SignOut(){
-          logOut()
-          this.$store.commit('changeLoginState',{
-            isLogin:false
-          })
-          ElMessage.success('退出成功')
-          this.$router.push('/')
-        }
-      },
-      computed:{
-        isLogin(){
-          return this.$store.state.isLogin
-        }
-      },
+        },
+        methods:{
+            //退出登录
+            SignOut(){
+                logOut()
+                this.$store.commit('changeLoginState',{
+                    isLogin:false
+                })
+                ElMessage.success('退出成功')
+                this.$router.push('/')
+            }
+        },
+        computed:{
+            isLogin(){
+                return this.$store.state.isLogin
+            }
+        },
         data(){
             return{
                 UserToken:0,
@@ -160,6 +160,7 @@
         height: 40px;
         line-height: 40px;
     }
+    /*主体部分*/
     .PersonBody{
         margin-top: 50px;
         text-align: left;
