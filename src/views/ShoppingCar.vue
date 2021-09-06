@@ -2,6 +2,11 @@
     <div class="home">
         <!--导航栏-->
         <el-menu  class="el-menu-demo" mode="horizontal" >
+          <el-menu-item index="0">
+            <router-link to="/DataHome" style="text-decoration: none">
+              数据分析
+            </router-link>
+          </el-menu-item>
             <el-menu-item index="1">
                 <router-link to="/PersonPage" style="text-decoration: none">
                     个人中心
@@ -14,12 +19,12 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="4">
-                <div v-if="UserToken=='未登录'">
+                <div v-if="!isLogin">
                     <router-link to="/login" style="text-decoration: none">
                         点击这里，登录
                     </router-link>
                 </div>
-                <div v-if="UserToken!='未登录'">
+                <div v-if="isLogin">
                     <span>你好，{{UserName}}</span>
                 </div>
             </el-menu-item>
@@ -29,7 +34,7 @@
                 </router-link>
             </el-menu-item>
             <el-menu-item index="6">
-                <span @click="SignOut">退出登录</span>
+                <span @click="SignOut" v-show="isLogin">退出登录</span>
             </el-menu-item>
         </el-menu>
         <!--搜索框-->
@@ -138,7 +143,8 @@
     import {reactive,ref} from 'vue'
     import {useRoute, useRouter} from "vue-router";
     import GLOBAL from "../components/GlobalVariable"
-    import {ShoppingUserToken, ShoppingChange, SearchProduct, keepLogin} from "../http/api";
+    import {ShoppingUserToken, ShoppingChange, SearchProduct, keepLogin, logOut} from "../http/api";
+    import {ElMessage} from "element-plus";
 
     export default {
         name: "ShoppingCar",
@@ -460,10 +466,43 @@
                 ChangeNum
             }
         },
+      mounted() {
+        keepLogin().then(res=>{
+          GLOBAL.token.value = res.message;
+          GLOBAL.userName.value = res.userName;
+          //用户token和用户名
+          this.UserToken = GLOBAL.token.value;
+          this.UserName = GLOBAL.userName.value;
+          if(this.UserToken !== '未登录'){
+            this.$store.commit('changeLoginState',{
+              isLogin:true
+            })
+          }else{
+            this.$store.commit('changeLoginState',{
+              isLogin:false
+            })
+          }
+        })
+      },
+      computed:{
+        isLogin(){
+          return this.$store.state.isLogin
+        }
+      },
+
         methods:{
             forId:function (index) {
                 return "product" +index
-            }
+            },
+          //退出登录
+          SignOut(){
+            logOut()
+            this.$store.commit('changeLoginState',{
+              isLogin:false
+            })
+            ElMessage.success('退出成功')
+            this.$router.push('/')
+          }
         }
     }
 
