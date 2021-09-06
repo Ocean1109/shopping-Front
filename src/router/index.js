@@ -12,6 +12,7 @@ import SearchProductList from "../views/SearchProductList";
 import ChatRoom from "../views/ChatRoom";
 import test from "../views/test"
 
+
 import DataHome from "../views/DataHome";
 
 
@@ -174,6 +175,7 @@ const routes = [
     path:'/test',
     name:'test',
     component:test
+
    },//{
   //   //购买行为页面
   //   path:'/ConsumerBehavior',
@@ -196,6 +198,8 @@ const routes = [
   //   component:ChinaMap
   // }
 
+
+ 
 
 ]
 

@@ -9,7 +9,9 @@
             DrawClick(){
                 let myEchart = this.$echarts.init(document.getElementById("main"));
                 let data = [{
+
                     name: '男',
+
                     children: [{
                         name: 'Uncle Leo',
                         value: 15,
@@ -39,7 +41,9 @@
                         }]
                     }]
                 }, {
+
                     name: '女',
+
                     children: [{
                         name: 'Uncle Nike',
                         children: [{
