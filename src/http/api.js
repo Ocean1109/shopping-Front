@@ -135,3 +135,32 @@ export const ListChatDetail=(chatId)=>{
 export const CreateChat = (data)=>{
     return $http.post('/newChat',data,{'Content-Type':'multipart/form-data'})
 }
+
+//买家消费行为对比
+export const BehaviorCom = ()=>{
+    return $http.get('/analysisAction')
+}
+
+//买家性别对比
+export const SexCom = ()=>{
+    return $http.get('/compareNum')
+}
+
+//买家年龄对比
+export const AgeCom = ()=>{
+    return $http.get('/compareAge')
+}
+
+//商品交易量对比
+export const CategoryCom = ()=>{
+    return $http.get('/topProductCategory')
+}
+
+//上传文件
+export const UploadFile = (data)=>{
+    return $http.post('/ImportCsv',data,{'Content-Type':'multipart/form-data'})
+}
+//中国地图数据
+export const MapCom = ()=>{
+    return $http.get('/compareProvince')
+}

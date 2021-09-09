@@ -63,11 +63,13 @@
               <AgeStatisticsBySex></AgeStatisticsBySex>
             </div>
             <div v-if="dataSideBarChoice == 4">
+              <CommoditySeries></CommoditySeries>
             </div>
             <div v-if="dataSideBarChoice == 5">
               <ChinaMap></ChinaMap>
             </div>
             <div v-if="dataSideBarChoice == 6">
+              <FileEdit></FileEdit>
             </div>
           </el-col>
         </el-row>
@@ -83,11 +85,13 @@
   import {ElMessage} from "element-plus";
   import AgeStatisticsBySex from "./Echarts/AgeStatisticsBySex";
   import ChinaMap from "./Echarts/ChinaMap";
+  import CommoditySeries from "./Echarts/CommoditySeries";
   import ConsumerBehavior from "./Echarts/ConsumerBehavior";
   import SexStatistics from "./Echarts/SexStatistics";
+  import FileEdit from "./Echarts/FileEdit";
   export default {
     name: "DataHome",
-    components: {DataSidebar,AgeStatisticsBySex,ChinaMap,ConsumerBehavior,SexStatistics},
+    components: {DataSidebar,AgeStatisticsBySex,ConsumerBehavior,SexStatistics,CommoditySeries,FileEdit,ChinaMap},
     mounted() {
       keepLogin().then(res=>{
         GLOBAL.token.value = res.message;
