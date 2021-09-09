@@ -31,7 +31,7 @@
         </el-menu-item>
         <el-menu-item :index="6">
           <i class="el-icon-menu"></i>
-          <template #title>回头客预测分数对比</template>
+          <template #title>数据上传</template>
         </el-menu-item>
       </el-menu>
     </el-col>
