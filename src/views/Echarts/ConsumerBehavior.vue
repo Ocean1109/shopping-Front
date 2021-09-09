@@ -72,10 +72,10 @@
                                     show: false
                                 },
                                 data: [
-                                    {value: this.Type0, name: '特别关注'},
-                                    {value: this.Type1, name: '购买'},
-                                    {value: this.Type2, name: '添加购物车'},
-                                    {value: this.Type3, name: '点击'}
+                                    {value: this.Type0, name: '点击'},
+                                    {value: this.Type1, name: '加入购物车'},
+                                    {value: this.Type2, name: '购买'},
+                                    {value: this.Type3, name: '关注商品'}
                                 ]
                             }
                         ]
