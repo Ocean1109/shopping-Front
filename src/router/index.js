@@ -10,7 +10,6 @@ import Payment from "../views/Payment";
 import DetailProductInfo from "../views/DetailProductInfo"
 import SearchProductList from "../views/SearchProductList";
 import ChatRoom from "../views/ChatRoom";
-import test from "../views/test"
 
 
 import DataHome from "../views/DataHome";
@@ -164,13 +163,7 @@ const routes = [
     path:'/ChatRoom',
     name:'ChatRoom',
     component:ChatRoom
-  },{
-    //测试
-    path:'/test',
-    name:'test',
-    component:test
-
-   },
+  },
 
 ]
 

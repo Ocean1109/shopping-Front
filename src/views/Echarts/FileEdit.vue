@@ -39,12 +39,13 @@
                 </div>
             </el-col>
         </el-row>
+        <div style="height: 400px"></div>
     </div>
 </template>
 
 <script>
     import {UploadFile} from "../../http/api"
-    // import {reactive} from "vue"
+    import {ElMessage} from "element-plus";
     export default {
         name: "FileEdit",
         data(){
@@ -81,14 +82,17 @@
             },
 
             Commit(){
-                // console.log(this.fileList)
                 console.log(typeof this.fileList[0].raw)
-                // File.file = this.fileList[0].raw
                 let formdata = new FormData()
                 formdata.append("file",this.fileList[0].raw)
                 UploadFile(formdata).then(res=>{
-                    // console.log(1)
                     console.log(res)
+                    if (res.code === 0){
+                        ElMessage.success("上传成功")
+                    }
+                    else{
+                        ElMessage.error("上传失败")
+                    }
                 })
             }
         },

@@ -135,6 +135,7 @@
 .com-chart{
     width: 1000px;
     height: 800px;
+    margin-left: 50px;
 }
 </style>
 

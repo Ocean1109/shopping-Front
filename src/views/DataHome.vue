@@ -7,7 +7,11 @@
           数据分析
         </router-link>
       </el-menu-item>
-      <el-menu-item index="1">个人中心</el-menu-item>
+      <el-menu-item index="1">
+        <router-link to="/PersonPage" style="text-decoration: none">
+          个人中心
+        </router-link>
+      </el-menu-item>
       <el-menu-item index="2">
         <router-link to="/ShoppingCar" style="text-decoration: none">
           我的购物车
