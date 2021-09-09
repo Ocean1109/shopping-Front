@@ -43,6 +43,16 @@
                             trigger: 'item',
                             formatter: "{b} : {c}"  //{b}省份 {c}数值
                         },
+                        visualMap: {
+                          min: 1000,
+                          max: 2000,
+                          text:['High','Low'],
+                          realtime: false,
+                          calculable: true,
+                          inRange: {
+                            color: ['#e0ffff', '#1781b5']
+                          }
+                        },
                         series:[
                             {
                                 type: "map",
@@ -55,7 +65,7 @@
                                 },
                                 emphasis:{//高亮时的设置
                                     itemStyle:{
-                                        areaColor:'#81B5F9',//高亮时地图区域背景颜色
+                                        areaColor:'#eea2a4',//高亮时地图区域背景颜色
                                     },
                                     label:{//文字颜色，样式在此处
                                         color:'rgb(230, 102, 18)',
